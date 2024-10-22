@@ -1,0 +1,84 @@
+<?php
+
+use Illuminate\Http\Request;
+use App\Models\AffiliateLink;
+use App\Models\AffiliateCommission;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PlanController;
+use App\Http\Controllers\RewardController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\WebhookController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AffiliateTypeController;
+use App\Http\Controllers\AgentRegisterController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\GeneralRegisterController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "web" middleware group. Make something great!
+|
+*/
+
+Route::get('/', function (Request $request) {
+    // URLにアフィリエイトトークン（ref）が含まれている場合、それをセッションに保存
+    if ($request->has('ref')) {
+        session(['affiliate_ref' => $request->input('ref')]);
+    }
+
+    return view('welcome'); // 公式サイトのトップページビューを表示
+});
+
+Route::get('/plans', [PlanController::class, 'index'])->name('plans.index');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+Route::get('/reward-request', [RewardController::class, 'showRequestForm'])->name('reward.request');
+Route::post('/reward-request/confirm', [RewardController::class, 'confirmRequest'])->name('reward.confirm');
+Route::post('/reward-request/finalize', [RewardController::class, 'finalizeRequest'])->name('reward.finalize');
+
+
+// 認証が必要なルート
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Checkout関連のルート
+Route::get('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('checkout');
+Route::get('/checkout/success', [CheckoutController::class, 'success'])->name('checkout.success');
+Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('checkout.cancel');
+
+// Stripe決済後のwebhook
+Route::post('/webhook/stripe-zen', [WebhookController::class, 'handleWebhook']);
+
+// 一般向けの登録
+Route::get('/general-register', [GeneralRegisterController::class, 'showRegistrationForm'])->name('general.register');
+Route::post('/general-register', [GeneralRegisterController::class, 'register']);
+
+// 代理店向けの登録
+Route::get('/agent-register', [AgentRegisterController::class, 'showRegistrationForm'])->name('agent.register');
+Route::post('/agent-register', [AgentRegisterController::class, 'register']);
+
+
+// 管理者
+Route::middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::resource('products', ProductController::class);
+    Route::resource('affiliate-types', AffiliateTypeController::class);
+});
+
+
+require __DIR__ . '/auth.php';

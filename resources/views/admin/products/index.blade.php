@@ -1,0 +1,59 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('商材一覧') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <h3 class="text-lg font-semibold">登録された商材</h3>
+
+                    <table class="min-w-full leading-normal mt-4">
+                        <thead>
+                            <tr>
+                                <th
+                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    商材名
+                                </th>
+                                <th
+                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    説明
+                                </th>
+                                <th
+                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    価格
+                                </th>
+                                <th
+                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    URL
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($products as $product)
+                            <tr>
+                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                    {{ $product->name }}
+                                </td>
+                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                    {{ $product->description }}
+                                </td>
+                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                    ¥{{ number_format($product->price) }}
+                                </td>
+                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                    <a href="{{ $product->url }}" class="text-blue-500">{{ $product->url }}</a>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

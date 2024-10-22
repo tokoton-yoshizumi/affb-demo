@@ -1,0 +1,468 @@
+
+   PASS  Tests\Unit\ExampleTest
+  ✓ that true is true                                                    0.01s  
+
+   FAIL  Tests\Feature\AgentRegisterControllerTest
+  ✓ it displays the agent registration form                              2.15s  
+  ⨯ it registers a new agent user                                        0.16s  
+
+   FAIL  Tests\Feature\Auth\AuthenticationTest
+  ✓ login screen can be rendered                                         0.01s  
+  ⨯ users can authenticate using the login screen                        0.02s  
+  ⨯ users can not authenticate with invalid password                     0.01s  
+  ⨯ users can logout                                                     0.04s  
+
+   FAIL  Tests\Feature\Auth\EmailVerificationTest
+  ⨯ email verification screen can be rendered                            0.01s  
+  ⨯ email can be verified                                                0.01s  
+  ⨯ email is not verified with invalid hash                              0.01s  
+
+   FAIL  Tests\Feature\Auth\PasswordConfirmationTest
+  ⨯ confirm password screen can be rendered                              0.02s  
+  ⨯ password can be confirmed                                            0.01s  
+  ⨯ password is not confirmed with invalid password                      0.01s  
+
+   FAIL  Tests\Feature\Auth\PasswordResetTest
+  ✓ reset password link screen can be rendered                           0.01s  
+  ⨯ reset password link can be requested                                 0.01s  
+  ⨯ reset password screen can be rendered                                0.01s  
+  ⨯ password can be reset with valid token                               0.01s  
+
+   FAIL  Tests\Feature\Auth\PasswordUpdateTest
+  ⨯ password can be updated                                              0.01s  
+  ⨯ correct password must be provided to update password                 0.01s  
+
+   FAIL  Tests\Feature\Auth\RegistrationTest
+  ✓ registration screen can be rendered                                  0.01s  
+  ⨯ new users can register                                               0.01s  
+
+   PASS  Tests\Feature\ExampleTest
+  ✓ it returns a successful response                                     0.01s  
+
+   FAIL  Tests\Feature\ProfileTest
+  ⨯ profile page is displayed                                            0.01s  
+  ⨯ profile information can be updated                                   0.01s  
+  ⨯ email verification status is unchanged when the email address is un… 0.01s  
+  ⨯ user can delete their account                                        0.01s  
+  ⨯ correct password must be provided to delete account                  0.01s  
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\AgentRegisterControllerTest > it re…  QueryException   
+  SQLSTATE[42S22]: Column not found: 1054 Unknown column 'role' in 'where clause' (Connection: mysql, SQL: select count(*) as aggregate from `users` where (`email` = agent@example.com and `role` = agent))
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:423
+    419▕             // For select statements, we'll simply execute the query and return an array
+    420▕             // of the database result set. Each element in the array will be a single
+    421▕             // row from the database table, and will either be an array or objects.
+    422▕             $statement = $this->prepared(
+  ➜ 423▕                 $this->getPdoForSelect($useReadPdo)->prepare($query)
+    424▕             );
+    425▕ 
+    426▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    427▕
+
+      [2m+10 vendor frames [22m
+  11  tests/Feature/AgentRegisterControllerTest.php:40
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\AuthenticationTest > users can…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Amara Walker, `email` = marge22@example.com, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = 2kIoaApaXU, `created_at` = 2024-10-17 17:49:33, `id` = 2, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 2)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/AuthenticationTest.php:13
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\AuthenticationTest > users can…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Dr. Kyleigh Grimes DVM, `email` = jewel.cruickshank@example.net, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = AySsWavLMZ, `created_at` = 2024-10-17 17:49:33, `id` = 3, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 3)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/AuthenticationTest.php:25
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\AuthenticationTest > users can…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Earl Ortiz Sr., `email` = damore.rod@example.org, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = JneBOdgNjM, `created_at` = 2024-10-17 17:49:33, `id` = 4, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 4)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/AuthenticationTest.php:36
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\EmailVerificationTest > email…   QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Mr. Dawson Moore DVM, `email` = pfeffer.arno@example.net, `email_verified_at` = ?, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = 6k2mTQs63n, `created_at` = 2024-10-17 17:49:33, `id` = 5, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 5)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+11 vendor frames [22m
+  22  tests/Feature/Auth/EmailVerificationTest.php:10
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\EmailVerificationTest > email…   QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Dr. Federico Harber I, `email` = haley.lizzie@example.com, `email_verified_at` = ?, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = cACfbwHcLI, `created_at` = 2024-10-17 17:49:33, `id` = 6, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 6)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+11 vendor frames [22m
+  22  tests/Feature/Auth/EmailVerificationTest.php:20
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\EmailVerificationTest > email…   QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Miss Earlene Rodriguez III, `email` = runte.julien@example.com, `email_verified_at` = ?, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = 6WMMT0wItx, `created_at` = 2024-10-17 17:49:33, `id` = 7, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 7)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+11 vendor frames [22m
+  22  tests/Feature/Auth/EmailVerificationTest.php:40
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordConfirmationTest > con…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Ilene Sanford, `email` = bauch.rick@example.org, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = bWmEvNOpNO, `created_at` = 2024-10-17 17:49:33, `id` = 8, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 8)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/PasswordConfirmationTest.php:6
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordConfirmationTest > pas…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Treva Quitzon, `email` = deckow.genesis@example.net, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = K0Byws36kv, `created_at` = 2024-10-17 17:49:33, `id` = 9, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 9)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/PasswordConfirmationTest.php:14
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordConfirmationTest > pas…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Mrs. Cleta Larkin MD, `email` = qwehner@example.com, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = tWdJiDnwqh, `created_at` = 2024-10-17 17:49:33, `id` = 10, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 10)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/PasswordConfirmationTest.php:25
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordResetTest > reset pass…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Lucas McDermott, `email` = christa.dubuque@example.com, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = KbE9zCADwB, `created_at` = 2024-10-17 17:49:33, `id` = 11, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 11)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/PasswordResetTest.php:16
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordResetTest > reset pass…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Zakary Bernier, `email` = xmosciski@example.com, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = pRB751ZWPw, `created_at` = 2024-10-17 17:49:33, `id` = 12, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 12)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/PasswordResetTest.php:26
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordResetTest > password c…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Eldon Gutkowski, `email` = malcolm33@example.net, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = adYZMZdRJf, `created_at` = 2024-10-17 17:49:33, `id` = 13, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 13)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/PasswordResetTest.php:42
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordUpdateTest > password…   QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Julio Durgan, `email` = echamplin@example.net, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = FnFsAIT0EP, `created_at` = 2024-10-17 17:49:33, `id` = 14, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 14)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/PasswordUpdateTest.php:7
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\PasswordUpdateTest > correct p…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Drake Koepp, `email` = constantin.emmerich@example.org, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = Lw2xWsOLrc, `created_at` = 2024-10-17 17:49:33, `id` = 15, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 15)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/Auth/PasswordUpdateTest.php:26
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\Auth\RegistrationTest > new users can register         
+  The user is not authenticated
+Failed asserting that false is true.
+
+The following errors occurred during the last request:
+
+Supporter keywordは必須項目です。
+
+  at tests/Feature/Auth/RegistrationTest.php:19
+     15▕         'password' => 'password',
+     16▕         'password_confirmation' => 'password',
+     17▕     ]);
+     18▕ 
+  ➜  19▕     $this->assertAuthenticated();
+     20▕     $response->assertRedirect(RouteServiceProvider::HOME);
+     21▕ });
+     22▕
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\ProfileTest > profile page is displ…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Miss Marge Langosh, `email` = desiree90@example.org, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = w1twuegFAd, `created_at` = 2024-10-17 17:49:33, `id` = 16, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 16)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/ProfileTest.php:6
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\ProfileTest > profile information c…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Dr. Willis Bogisich, `email` = elody28@example.org, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = XyLkb8wYHC, `created_at` = 2024-10-17 17:49:33, `id` = 17, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 17)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/ProfileTest.php:16
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\ProfileTest > email verification st…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Alessandro Morar, `email` = luella.legros@example.com, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = JywzJ837sS, `created_at` = 2024-10-17 17:49:33, `id` = 18, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 18)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/ProfileTest.php:37
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\ProfileTest > user can delete their…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Abbie Reinger, `email` = dale.hirthe@example.net, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = 955ePDwIBX, `created_at` = 2024-10-17 17:49:33, `id` = 19, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 19)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/ProfileTest.php:54
+
+  ────────────────────────────────────────────────────────────────────────────  
+   FAILED  Tests\Feature\ProfileTest > correct password must…  QueryException   
+  SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`zen_member`.`users`, CONSTRAINT `users_affiliate_program_id_foreign` FOREIGN KEY (`affiliate_program_id`) REFERENCES `affiliate_programs` (`id`)) (Connection: mysql, SQL: update `users` set `name` = Dr. Elton Langosh I, `email` = yborer@example.org, `email_verified_at` = 2024-10-17 17:49:33, `password` = $2y$04$s5a4jFi/1kdQBuauOkt7M.s3vAvHk82UGz.KRe8W.6s12IptOvkrO, `remember_token` = 8DyWupuG1n, `created_at` = 2024-10-17 17:49:33, `id` = 20, `affiliate_program_id` = 2, `users`.`updated_at` = 2024-10-17 17:49:33 where `id` = 20)
+
+  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:612
+    608▕             $statement = $this->getPdo()->prepare($query);
+    609▕ 
+    610▕             $this->bindValues($statement, $this->prepareBindings($bindings));
+    611▕ 
+  ➜ 612▕             $statement->execute();
+    613▕ 
+    614▕             $this->recordsHaveBeenModified(
+    615▕                 ($count = $statement->rowCount()) > 0
+    616▕             );
+
+      [2m+9 vendor frames [22m
+  10  app/Models/User.php:88
+      [2m+10 vendor frames [22m
+  21  tests/Feature/ProfileTest.php:71
+
+
+  Tests:    21 failed, 6 passed (9 assertions)
+  Duration: 2.66s
+

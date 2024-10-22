@@ -1,0 +1,1 @@
+<img class="w-40" src="{{ asset('images/zen.png') }}" alt="Logo">
