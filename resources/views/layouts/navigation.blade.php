@@ -34,6 +34,12 @@
                         {{ __('商材管理') }}
                     </x-nav-link>
 
+                    <!-- 振込申請一覧リンク（管理者のみ） -->
+                    <x-nav-link :href="route('admin.reward-requests.index')"
+                        :active="request()->routeIs('admin.reward-requests.*')">
+                        {{ __('振込申請一覧') }}
+                    </x-nav-link>
+
                     {{-- <x-nav-link :href="route('affiliate-types.index')"
                         :active="request()->routeIs('affiliate-types.*')">
                         {{ __('アフィリエイタータイプ管理') }}
@@ -135,6 +141,12 @@
             <!-- 商材登録リンク (レスポンシブ、管理者のみ) -->
             <x-responsive-nav-link :href="route('products.index')" :active="request()->routeIs('products.*')">
                 {{ __('商材登録') }}
+            </x-responsive-nav-link>
+
+            <!-- 振込申請一覧リンク (レスポンシブ、管理者のみ) -->
+            <x-responsive-nav-link :href="route('admin.reward-requests.index')"
+                :active="request()->routeIs('admin.reward_requests.*')">
+                {{ __('振込申請一覧') }}
             </x-responsive-nav-link>
 
 

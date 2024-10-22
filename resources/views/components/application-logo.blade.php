@@ -1,1 +1,1 @@
-<img class="w-40" src="{{ asset('images/zen.png') }}" alt="Logo">
+<h1 class="text-3xl font-bold">AffB Demo</h1>

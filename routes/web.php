@@ -16,6 +16,7 @@ use App\Http\Controllers\AffiliateTypeController;
 use App\Http\Controllers\AgentRegisterController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\GeneralRegisterController;
+use App\Http\Controllers\Admin\RewardRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,8 +77,13 @@ Route::post('/agent-register', [AgentRegisterController::class, 'register']);
 // 管理者
 Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/products/show-code/{product}', [ProductController::class, 'showCode'])->name('products.showCode');
+    Route::post('/products/{product}/track-later', [ProductController::class, 'trackLater'])->name('products.track_later');
+    Route::post('/products/{product}/track-done', [ProductController::class, 'trackDone'])->name('products.track_done');
+
     Route::resource('products', ProductController::class);
     Route::resource('affiliate-types', AffiliateTypeController::class);
+    Route::get('/admin/reward-requests', [RewardRequestController::class, 'index'])->name('admin.reward-requests.index');
 });
 
 

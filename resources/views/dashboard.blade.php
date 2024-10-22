@@ -64,16 +64,6 @@
                     </div>
                     <p class="mt-4 font-semibold">合計報酬: ¥{{ number_format($totalCommission) }}</p>
 
-                    <p class="mt-8">
-                        あなたのアフィリエイトリンク:<br>
-                        <span id="affiliateLink" class="cursor-pointer text-blue-500">
-                            {{ 'https://theme.wpzen.jp/?ref=' . Auth::user()->affiliateLink->token }}
-                        </span>
-                        <button id="copyButton" class="ml-2 bg-blue-500 text-white px-3 py-1 rounded">コピー</button>
-                        <span id="copyMessage" class="text-green-500 mt-2 hidden">コピーしました</span>
-                    </p>
-
-                    <p class="mt-2">このリンクをブログやSNSでご紹介いただき、リンクから購入された場合に報酬が発生します（{{ $rewardDescription }}）</p>
 
                     <!-- 振込申請ボタン -->
                     <div class="mt-6">
@@ -86,25 +76,26 @@
             </div>
         </div>
     </div>
-    <div class="py-12">
+    <div class="pb-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h3 class="text-lg font-semibold">あなたのアフィリエイトリンク</h3>
+                    <h3 class="font-bold text-2xl">あなたのアフィリエイトリンク</h3>
+                    <p class="mt-2">このリンクをブログやSNSでご紹介いただき、リンクから購入された場合に報酬が発生します</p>
 
                     <table class="min-w-full leading-normal mt-4">
                         <thead>
                             <tr>
                                 <th
-                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
                                     商材名
                                 </th>
                                 <th
-                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    class="w-[60%] px-5 py-3 border-b-2 border-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
                                     アフィリエイトリンク
                                 </th>
                                 <th
-                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
                                     報酬額
                                 </th>
                             </tr>
@@ -112,16 +103,34 @@
                         <tbody>
                             @foreach ($affiliate_links as $link)
                             <tr>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                <td class="px-5 py-5 border-b border-gray-200 text-base">
                                     {{ $link->product->name }}
                                 </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    <a href="{{ $link->product->url . '?ref=' . $link->token }}" class="text-blue-500">
+                                <td class="px-5 py-5 border-b border-gray-200 text-base flex items-center">
+                                    <!-- リンク部分 -->
+                                    <span id="affiliateLink{{ $loop->index }}" class="cursor-pointer hover:underline"
+                                        onclick="copyToClipboard('{{ $link->product->url . '?ref=' . $link->token }}', 'copyMessage{{ $loop->index }}'); return false;">
                                         {{ $link->product->url . '?ref=' . $link->token }}
-                                    </a>
+                                    </span>
+
+                                    <!-- コピー用ボタン -->
+                                    <button id="copyButton{{ $loop->index }}"
+                                        onclick="copyToClipboard('{{ $link->product->url . '?ref=' . $link->token }}', 'copyMessage{{ $loop->index }}')"
+                                        class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ml-2 inline-flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor"
+                                            class="size-5 cursor-pointer hover:underline">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+                                        </svg>
+                                        <span class="text-xs">コピー</span>
+                                    </button>
+
+                                    <!-- コピー完了メッセージ -->
+                                    <span id="copyMessage{{ $loop->index }}"
+                                        class="ml-2 text-xs text-red-500 hidden">コピーしました！</span>
                                 </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    <!-- ユーザーのaffiliate_type_idに基づいて報酬を表示 -->
+                                <td class="px-5 py-5 border-b border-gray-200 text-base">
                                     @php
                                     $commission = $link->product->commissions()
                                     ->where('affiliate_type_id', Auth::user()->affiliate_type_id)
@@ -140,28 +149,20 @@
     </div>
 
     <script>
-        function copyToClipboard(text) {
-            var tempInput = document.createElement('input');
-            tempInput.value = text;
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
+        function copyToClipboard(text, messageId) {
+        var tempInput = document.createElement('input');
+        tempInput.value = text;
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        document.execCommand('copy');
+        document.body.removeChild(tempInput);
 
-            document.getElementById('copyMessage').classList.remove('hidden');
-            setTimeout(function() {
-                document.getElementById('copyMessage').classList.add('hidden');
-            }, 2000);
-        }
-
-        document.getElementById('affiliateLink').addEventListener('click', function() {
-            var linkText = document.getElementById('affiliateLink').textContent;
-            copyToClipboard(linkText);
-        });
-
-        document.getElementById('copyButton').addEventListener('click', function() {
-            var linkText = document.getElementById('affiliateLink').textContent;
-            copyToClipboard(linkText);
-        });
+        // コピー完了メッセージを表示
+        var messageElement = document.getElementById(messageId);
+        messageElement.classList.remove('hidden');
+        setTimeout(function() {
+            messageElement.classList.add('hidden');
+        }, 2000); // 2秒後にメッセージを非表示に
+    }
     </script>
 </x-app-layout>

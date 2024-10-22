@@ -7,8 +7,9 @@ use App\Models\Product;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\AffiliateLink;
-use App\Models\ProductCommission;
 use App\Models\AffiliateType;
+use App\Models\ProductCommission;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -63,8 +64,8 @@ class ProductController extends Controller
                 'token' => Str::random(10),
             ]);
         }
-
-        return redirect()->route('products.index')->with('success', '商材と報酬、アフィリエイトリンクが生成されました');
+        // 次のステップにリダイレクト
+        return redirect()->route('products.showCode', ['product' => $product->id]);
     }
 
     // 商材編集フォームの表示
@@ -77,52 +78,110 @@ class ProductController extends Controller
     // 商材の更新
     public function update(Request $request, Product $product)
     {
-        // バリデーション
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required',
-            'price' => 'required|integer',
-            'url' => 'required|url',
-            'commissions' => 'required|array', // 各タイプごとの報酬を配列としてバリデーション
-        ]);
+        try {
+            // バリデーション
+            $request->validate([
+                'name' => 'required',
+                'description' => 'required',
+                'price' => 'required|integer',
+                'url' => 'required|url',
+                'commissions' => 'required|array',
+            ]);
 
-        // 商材を更新
-        $product->update($request->only(['name', 'description', 'price', 'url']));
+            // 商材を更新
+            $product->update($request->only(['name', 'description', 'price', 'url']));
 
-        // 報酬情報を更新
-        ProductCommission::where('product_id', $product->id)->delete(); // 既存の報酬を削除して再登録
-        foreach ($request->commissions as $affiliateTypeId => $commission) {
-            if ($commission !== null) {
-                ProductCommission::create([
-                    'product_id' => $product->id,
-                    'affiliate_type_id' => $affiliateTypeId,
-                    'fixed_commission' => $commission,
+            // ログに更新情報を記録
+            Log::info('Product updated:', ['product_id' => $product->id]);
+
+            // 報酬情報を更新
+            ProductCommission::where('product_id', $product->id)->delete();
+            foreach ($request->commissions as $affiliateTypeId => $commission) {
+                if ($commission !== null) {
+                    ProductCommission::create([
+                        'product_id' => $product->id,
+                        'affiliate_type_id' => $affiliateTypeId,
+                        'fixed_commission' => $commission,
+                    ]);
+                }
+            }
+
+            // アフィリエイトリンクを更新
+            $affiliates = User::where('is_admin', false)->get();
+            foreach ($affiliates as $affiliate) {
+                $affiliateLink = AffiliateLink::firstOrCreate(
+                    ['user_id' => $affiliate->id, 'product_id' => $product->id],
+                    ['token' => Str::random(10)]
+                );
+
+                // ログにリンク更新情報を記録
+                Log::info('Affiliate link updated:', ['affiliate_id' => $affiliate->id, 'product_id' => $product->id]);
+
+                $affiliateLink->update([
+                    'url' => $product->url . '?ref=' . $affiliate->id,
                 ]);
             }
-        }
 
-        // アフィリエイトリンクを更新
-        $affiliates = User::where('is_admin', false)->get();
-        foreach ($affiliates as $affiliate) {
-            // 既存のアフィリエイトリンクがある場合は更新、なければ作成
-            $affiliateLink = AffiliateLink::firstOrCreate(
-                ['user_id' => $affiliate->id, 'product_id' => $product->id],
-                ['token' => Str::random(10)]
-            );
-
-            // URLを更新
-            $affiliateLink->update([
-                'url' => $product->url . '?ref=' . $affiliate->id,
+            // 更新後に追跡コードのページへリダイレクト
+            return redirect()->route('products.showCode', ['product' => $product->id])
+                ->with('success', '商材とアフィリエイトリンク、報酬が更新されました');
+        } catch (\Exception $e) {
+            // エラーログを出力
+            Log::error('Error updating product:', [
+                'error_message' => $e->getMessage(),
+                'product_id' => $product->id,
             ]);
-        }
 
-        return redirect()->route('products.index')->with('success', '商材とアフィリエイトリンク、報酬が更新されました');
+            // エラーメッセージを返す
+            return redirect()->back()->withErrors('商材の更新中にエラーが発生しました。');
+        }
     }
+
+
+
+
 
     // 商材の削除
     public function destroy(Product $product)
     {
         $product->delete();
         return redirect()->route('products.index')->with('success', '商材が削除されました');
+    }
+
+    public function showCode($productId)
+    {
+        // 商材IDで商材を取得
+        $product = Product::findOrFail($productId);
+
+        // 商材の情報をビューに渡す
+        return view('admin.products.show_code', compact('product'));
+    }
+
+    public function trackLater($productId)
+    {
+        // トラッキングコード未実装状態にする
+        $product = Product::findOrFail($productId);
+        $product->tracking_code_status = 'not_implemented';
+        $product->save();
+
+        return redirect()->route('products.index')->with('status', '「トラッキングコード未実装」としてマークされました。');
+    }
+
+    public function trackDone($productId)
+    {
+        // トラッキングコード完了状態にする
+        $product = Product::findOrFail($productId);
+        $product->tracking_code_status = 'implemented';
+        $product->save();
+
+        return redirect()->route('products.index')->with('status', '「トラッキングコード完了」としてマークされました。');
+    }
+
+
+
+    public function show($id)
+    {
+        // このメソッドが呼ばれた場合のデフォルトの動作を定義（空でも可）
+        return redirect()->route('products.index');
     }
 }

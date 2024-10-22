@@ -52,27 +52,37 @@ class WebhookController extends Controller
                 if ($affiliateLink) {
                     $referrer = $affiliateLink->user;
 
-                    if ($referrer && $referrer->affiliateProgram) {
-                        // 固定報酬が設定されている場合はそれを使用
-                        if ($referrer->affiliateProgram->fixed_commission) {
-                            $commission = $referrer->affiliateProgram->fixed_commission;
-                        } else {
-                            // 固定報酬が設定されていない場合は％で計算
-                            $commissionRate = $referrer->affiliateProgram->commission_rate / 100;
-                            $commission = 16800 * $commissionRate; // 例として16,800円に対する報酬を計算
+                    if ($referrer) {
+                        // 商品に紐付いたアフィリエイトリンクのproduct_idを取得
+                        $product = $affiliateLink->product;
+
+                        if ($product) {
+                            // ユーザーのaffiliate_type_idに基づいて報酬を取得
+                            $commissionData = $product->commissions()->where('affiliate_type_id', $referrer->affiliate_type_id)->first();
+
+                            if ($commissionData) {
+                                // 固定報酬が設定されている場合はそれを使用
+                                if ($commissionData->fixed_commission) {
+                                    $commission = $commissionData->fixed_commission;
+                                } else {
+                                    // 固定報酬が設定されていない場合は％で計算
+                                    $commissionRate = $commissionData->commission_rate / 100;
+                                    $commission = 16800 * $commissionRate; // 例として16,800円に対する報酬を計算
+                                }
+
+                                // アフィリエイト報酬を記録
+                                $newCommission = AffiliateCommission::create([
+                                    'user_id' => $referrer->id,
+                                    'affiliate_link_id' => $affiliateLink->id,
+                                    'amount' => $commission,
+                                    'session_id' => $sessionId,
+                                    'product_name' => $productName, // 商品名を保存
+                                ]);
+
+                                // コミッションが記録されたユーザーにメールを送信
+                                Mail::to($referrer->email)->send(new CommissionEarned($referrer, $commission));
+                            }
                         }
-
-                        // アフィリエイト報酬を記録
-                        $newCommission = AffiliateCommission::create([
-                            'user_id' => $referrer->id,
-                            'affiliate_link_id' => $affiliateLink->id,
-                            'amount' => $commission,
-                            'session_id' => $sessionId,
-                            'product_name' => $productName, // 商品名を保存
-                        ]);
-
-                        // コミッションが記録されたユーザーにメールを送信
-                        Mail::to($referrer->email)->send(new CommissionEarned($referrer, $commission));
                     }
                 }
             }
