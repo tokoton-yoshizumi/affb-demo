@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('affiliate_commissions', function (Blueprint $table) {
-            $table->string('session_id')->nullable()->change();
+            // $table->string('session_id')->nullable()->change();
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('affiliate_commissions', function (Blueprint $table) {
-            $table->string('session_id')->nullable(false)->change();
+            // $table->string('session_id')->nullable(false)->change();
         });
     }
 };
