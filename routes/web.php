@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FormWebhookController;
 use App\Http\Controllers\AffiliateTypeController;
 use App\Http\Controllers\AgentRegisterController;
 use App\Http\Controllers\AdminDashboardController;
