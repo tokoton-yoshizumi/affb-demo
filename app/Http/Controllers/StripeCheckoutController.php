@@ -12,60 +12,41 @@ class StripeCheckoutController extends Controller
 {
     public function createCheckoutSession(Request $request, $productId)
     {
-        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET'));
+        Log::info('Request received:', $request->all());
 
-        // 商材を取得
-        $product = Product::find($productId);
-
-        if (!$product || !$product->price_id) {
-            Log::error('Product not found or missing price_id', ['product_id' => $productId]);
-            return response()->json(['error' => 'Product not found or price_id is missing'], 404);
-        }
-
-        // クライアントから`affiliate_ref`を受け取る
         $affiliateRef = $request->input('affiliate_ref', null);
+        Log::info('Affiliate ref:', ['affiliate_ref' => $affiliateRef]);
 
         if (!$affiliateRef) {
-            Log::error('Affiliate ref is missing in the request.');
+            return response()->json(['error' => 'Affiliate ref is missing'], 400);
         }
 
-        try {
-            // Stripe Checkoutセッションを作成
-            $session = \Stripe\Checkout\Session::create([
-                'payment_method_types' => ['card'],
-                'line_items' => [[
-                    'price' => $product->price_id,
-                    'quantity' => 1,
-                ]],
-                'mode' => 'payment',
-                'success_url' => route('checkout.success'),
-                'cancel_url' => route('checkout.cancel'),
-                'metadata' => [
-                    'affiliate_ref' => $affiliateRef, // アフィリエイトトークン
-                    'product_id' => $product->id,    // 商品ID
-                ],
-            ]);
-
-            Log::info('Stripe Checkout Session created successfully', [
-                'url' => $session->url,
-                'metadata' => $session->metadata,
-            ]);
-
-            // Checkout URLに直接リダイレクト
-            return redirect($session->url);
-        } catch (\Exception $e) {
-            Log::error('Stripe Checkout Session creation failed', [
-                'error_message' => $e->getMessage(),
-                'product_id' => $productId,
-            ]);
-
-            // エラーメッセージを返す
-            return response()->json(['error' => 'Failed to create checkout session'], 500);
+        $product = Product::find($productId);
+        if (!$product || !$product->price_id) {
+            return response()->json(['error' => 'Product not found'], 404);
         }
+
+        Log::info('Creating Stripe Checkout session for:', ['product_id' => $product->id]);
+
+        $session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price' => $product->price_id,
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => route('checkout.success'),
+            'cancel_url' => route('checkout.cancel'),
+            'metadata' => [
+                'affiliate_ref' => $affiliateRef,
+                'product_id' => $product->id,
+            ],
+        ]);
+
+        Log::info('Stripe Checkout Session created:', ['url' => $session->url]);
+
+        return redirect($session->url);
     }
-
-
-
 
 
     public function success()
