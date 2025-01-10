@@ -65,6 +65,11 @@ Route::get('/checkout/cancel', [CheckoutController::class, 'cancel'])->name('che
 // Stripe決済後のwebhook
 Route::post('/webhook/stripe-zen', [WebhookController::class, 'handleWebhook']);
 
+
+// Webhookエンドポイントの設定
+Route::post('/webhook/form', [FormWebhookController::class, 'handle'])->name('webhook.form');
+
+
 // 一般向けの登録
 Route::get('/general-register', [GeneralRegisterController::class, 'showRegistrationForm'])->name('general.register');
 Route::post('/general-register', [GeneralRegisterController::class, 'register']);
