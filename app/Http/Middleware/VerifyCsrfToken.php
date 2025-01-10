@@ -13,5 +13,7 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'webhook/stripe-zen', // このルートのCSRF検証を除外
+        '/webhook/form', // CSRFチェックを除外するルート
+
     ];
 }
