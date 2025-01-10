@@ -94,53 +94,75 @@ class WebhookController extends Controller
 
     public function handleStripeWebhook(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET'));
-
-        $payload = @file_get_contents('php://input');
-        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
-        $event = null;
+        $payload = $request->getContent();
+        $sig_header = $request->header('Stripe-Signature');
+        $endpoint_secret = env('STRIPE_WEBHOOK_SECRET');
 
         try {
-            $event = \Stripe\Webhook::constructEvent(
+            // Stripe Webhookの署名を検証
+            $event = Webhook::constructEvent(
                 $payload,
                 $sig_header,
-                env('STRIPE_WEBHOOK_SECRET')
+                $endpoint_secret
             );
+
+            // イベントタイプが `checkout.session.completed` の場合
+            if ($event->type === 'checkout.session.completed') {
+                $session = $event->data->object;
+
+                // メタデータから情報を取得
+                $affiliateRef = $session->metadata->affiliate_ref ?? null;
+                $productId = $session->metadata->product_id ?? null;
+
+                if ($affiliateRef && $productId) {
+                    $affiliateLink = AffiliateLink::where('token', $affiliateRef)->first();
+                    $product = Product::find($productId);
+
+                    if ($affiliateLink && $product) {
+                        // アフィリエイタータイプに基づく報酬を取得
+                        $commissionAmount = $product->commissions()
+                            ->where('affiliate_type_id', $affiliateLink->user->affiliate_type_id)
+                            ->value('fixed_commission');
+
+                        if ($commissionAmount) {
+                            // アフィリエイト報酬を記録
+                            AffiliateCommission::create([
+                                'user_id' => $affiliateLink->user_id,
+                                'affiliate_link_id' => $affiliateLink->id,
+                                'amount' => $commissionAmount,
+                                'product_name' => $product->name,
+                                'session_id' => $session->id,
+                                'is_paid' => false,
+                            ]);
+
+                            Log::info('Affiliate commission recorded', [
+                                'user_id' => $affiliateLink->user_id,
+                                'product_id' => $productId,
+                                'amount' => $commissionAmount,
+                            ]);
+                        } else {
+                            Log::error('No commission amount found for product', ['product_id' => $productId]);
+                        }
+                    } else {
+                        Log::error('Affiliate link or product not found', [
+                            'affiliate_ref' => $affiliateRef,
+                            'product_id' => $productId,
+                        ]);
+                    }
+                } else {
+                    Log::error('Metadata is missing from the session', [
+                        'session_id' => $session->id,
+                    ]);
+                }
+            }
+
+            return response()->json(['status' => 'success'], 200);
         } catch (\UnexpectedValueException $e) {
+            Log::error('Invalid payload', ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Invalid payload'], 400);
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            Log::error('Invalid signature', ['error' => $e->getMessage()]);
             return response()->json(['error' => 'Invalid signature'], 400);
         }
-
-        if ($event->type === 'checkout.session.completed') {
-            $session = $event->data->object;
-
-            // メタデータから必要な情報を取得
-            $affiliateRef = $session->metadata->affiliate_ref;
-            $productId = $session->metadata->product_id;
-
-            // 商材とアフィリエイトリンクを特定
-            $product = Product::find($productId);
-            $affiliateLink = AffiliateLink::where('token', $affiliateRef)->first();
-
-            if ($product && $affiliateLink) {
-                $referrer = $affiliateLink->user;
-
-                // 報酬を計算
-                $commission = $product->fixed_commission ?? ($product->price * $product->commission_rate / 100);
-
-                // 報酬を記録
-                AffiliateCommission::create([
-                    'user_id' => $referrer->id,
-                    'affiliate_link_id' => $affiliateLink->id,
-                    'amount' => $commission,
-                    'product_name' => $product->name,
-                    'session_id' => $session->id,
-                    'is_paid' => 0,
-                ]);
-            }
-        }
-
-        return response()->json(['status' => 'success'], 200);
     }
 }
