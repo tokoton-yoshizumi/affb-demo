@@ -82,9 +82,16 @@ class ProductController extends Controller
     // 商材編集フォームの表示
     public function edit(Product $product)
     {
+        // アフィリエイタータイプを取得
         $affiliateTypes = AffiliateType::all();
-        return view('admin.products.edit', compact('product', 'affiliateTypes'));
+
+        // 商材に関連するコミッションを取得
+        $commissions = $product->commissions->pluck('fixed_commission', 'affiliate_type_id')->toArray();
+
+        // ビューにデータを渡す
+        return view('admin.products.edit', compact('product', 'affiliateTypes', 'commissions'));
     }
+
 
     // 商材の更新
     public function update(Request $request, Product $product)

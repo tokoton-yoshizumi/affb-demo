@@ -48,8 +48,9 @@
                         <!-- アフィリエイタータイプごとの報酬入力フィールド -->
                         @foreach($affiliateTypes as $type)
                         <div class="mb-4">
-                            <label for="commission_{{ $type->id }}" class="block text-sm font-medium text-gray-700">{{
-                                $type->name }}の報酬（固定）</label>
+                            <label for="commission_{{ $type->id }}" class="block text-sm font-medium text-gray-700">
+                                {{ $type->name }}の報酬（固定）
+                            </label>
                             <input type="number" name="commissions[{{ $type->id }}]" id="commission_{{ $type->id }}"
                                 value="{{ $commissions[$type->id] ?? '' }}" class="form-input mt-1 block w-full">
                         </div>
