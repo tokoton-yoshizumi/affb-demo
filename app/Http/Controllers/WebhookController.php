@@ -4,11 +4,12 @@ namespace App\Http\Controllers;
 
 use Stripe\Stripe;
 use Stripe\Webhook;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\AffiliateLink;
-use App\Models\AffiliateCommission;
-use Illuminate\Support\Facades\Mail; // メールファサードをインポート
-use App\Mail\CommissionEarned; // 作成したCommissionEarnedメールクラスをインポート
+use App\Mail\CommissionEarned;
+use App\Models\AffiliateCommission; // メールファサードをインポート
+use Illuminate\Support\Facades\Mail; // 作成したCommissionEarnedメールクラスをインポート
 
 class WebhookController extends Controller
 {
@@ -85,6 +86,58 @@ class WebhookController extends Controller
                         }
                     }
                 }
+            }
+        }
+
+        return response()->json(['status' => 'success'], 200);
+    }
+
+    public function handleStripeWebhook(Request $request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
+
+        $payload = @file_get_contents('php://input');
+        $sig_header = $_SERVER['HTTP_STRIPE_SIGNATURE'];
+        $event = null;
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload,
+                $sig_header,
+                env('STRIPE_WEBHOOK_SECRET')
+            );
+        } catch (\UnexpectedValueException $e) {
+            return response()->json(['error' => 'Invalid payload'], 400);
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            return response()->json(['error' => 'Invalid signature'], 400);
+        }
+
+        if ($event->type === 'checkout.session.completed') {
+            $session = $event->data->object;
+
+            // メタデータから必要な情報を取得
+            $affiliateRef = $session->metadata->affiliate_ref;
+            $productId = $session->metadata->product_id;
+
+            // 商材とアフィリエイトリンクを特定
+            $product = Product::find($productId);
+            $affiliateLink = AffiliateLink::where('token', $affiliateRef)->first();
+
+            if ($product && $affiliateLink) {
+                $referrer = $affiliateLink->user;
+
+                // 報酬を計算
+                $commission = $product->fixed_commission ?? ($product->price * $product->commission_rate / 100);
+
+                // 報酬を記録
+                AffiliateCommission::create([
+                    'user_id' => $referrer->id,
+                    'affiliate_link_id' => $affiliateLink->id,
+                    'amount' => $commission,
+                    'product_name' => $product->name,
+                    'session_id' => $session->id,
+                    'is_paid' => 0,
+                ]);
             }
         }
 

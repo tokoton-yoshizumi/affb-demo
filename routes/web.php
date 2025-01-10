@@ -16,6 +16,7 @@ use App\Http\Controllers\FormWebhookController;
 use App\Http\Controllers\AffiliateTypeController;
 use App\Http\Controllers\AgentRegisterController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\StripeCheckoutController;
 use App\Http\Controllers\GeneralRegisterController;
 use App\Http\Controllers\Admin\RewardRequestController;
 
@@ -69,6 +70,10 @@ Route::post('/webhook/stripe-zen', [WebhookController::class, 'handleWebhook']);
 
 // Webhookエンドポイントの設定
 Route::post('/webhook/form', [FormWebhookController::class, 'handle'])->name('webhook.form');
+
+Route::post('/create-checkout-session/{productId}', [StripeCheckoutController::class, 'createCheckoutSession']);
+
+Route::post('/webhook/stripe', [WebhookController::class, 'handleStripeWebhook'])->name('webhook.stripe');
 
 
 // 一般向けの登録
