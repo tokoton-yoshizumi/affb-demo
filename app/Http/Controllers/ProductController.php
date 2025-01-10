@@ -89,7 +89,7 @@ class ProductController extends Controller
             ]);
 
             // 商材を更新
-            $product->update($request->only(['name', 'description', 'price', 'url']));
+            $product->update($request->only(['name', 'description', 'price', 'url', 'price_id']));
 
             // ログに更新情報を記録
             Log::info('Product updated:', ['product_id' => $product->id]);
