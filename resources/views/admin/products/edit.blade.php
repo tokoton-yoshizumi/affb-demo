@@ -58,6 +58,14 @@
 
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">次へ</button>
                     </form>
+                    <form method="POST" action="{{ route('products.destroy', $product->id) }}" class="mt-4">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded"
+                            onclick="return confirm('本当に削除しますか？この操作は元に戻せません。')">
+                            この商品を削除
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
