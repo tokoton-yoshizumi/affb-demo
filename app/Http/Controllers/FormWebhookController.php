@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\AffiliateCommission;
-use App\Models\AffiliateLink;
 use App\Models\Product;
+use Illuminate\Http\Request;
+use App\Models\AffiliateLink;
+use App\Models\AffiliateCommission;
+use Illuminate\Support\Facades\Log;
 
 class FormWebhookController extends Controller
 {
     public function handle(Request $request)
     {
+
+        Log::info('Webhook Request:', $request->all()); // ログにリクエスト内容を記録
+
         // 必須フィールドを取得
         $affiliateRef = $request->input('affiliate_ref');
         $action = $request->input('action');
