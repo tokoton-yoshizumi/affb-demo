@@ -42,7 +42,7 @@
                         <div class="mb-4">
                             <label for="price_id" class="block text-sm font-medium text-gray-700">Stripe 価格ID</label>
                             <input type="text" name="price_id" id="price_id" class="form-input mt-1 block w-full"
-                                placeholder="price_xxxxx" required>
+                                placeholder="price_xxxxx" value="{{ old('price_id', $product->price_id) }}" required>
                         </div>
 
                         <!-- アフィリエイタータイプごとの報酬入力フィールド -->
