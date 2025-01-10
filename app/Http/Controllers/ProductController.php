@@ -41,7 +41,7 @@ class ProductController extends Controller
         ]);
 
         // 商材登録
-        $product = Product::create($request->only(['name', 'description', 'price', 'url']));
+        $product = Product::create($request->only(['name', 'description', 'price', 'url', 'price_id']));
 
         // 各アフィリエイタータイプごとの報酬を保存
         foreach ($request->commissions as $affiliateTypeId => $commission) {
