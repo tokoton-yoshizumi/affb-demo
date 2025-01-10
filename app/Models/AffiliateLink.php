@@ -27,4 +27,9 @@ class AffiliateLink extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function commissions()
+    {
+        return $this->hasMany(AffiliateCommission::class, 'affiliate_link_id');
+    }
 }

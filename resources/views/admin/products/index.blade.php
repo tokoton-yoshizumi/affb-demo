@@ -12,6 +12,7 @@
                     <div class="flex justify-between">
                         <h3 class="text-2xl font-semibold">商材一覧</h3>
 
+
                         <!-- 新規登録ボタン -->
                         <div class="my-4">
                             <a href="{{ route('products.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">
@@ -34,7 +35,7 @@
                                 </th>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left  font-semibold text-gray-600 uppercase tracking-wider">
-                                    価格
+                                    アフィリエイターへの報酬
                                 </th>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left  font-semibold text-gray-600 uppercase tracking-wider">
@@ -57,7 +58,16 @@
                                     {{ $product->description }}
                                 </td>
                                 <td class="px-5 py-5 border-b border-gray-200 ">
-                                    ¥{{ number_format($product->price) }}
+                                    @foreach ($product->commissions as $commission)
+                                    <div>
+                                        @if ($commission->affiliateType)
+                                        {{ $commission->affiliateType->name }}: ¥{{
+                                        number_format($commission->fixed_commission) }}
+                                        @else
+                                        未設定: ¥{{ number_format($commission->fixed_commission) }}
+                                        @endif
+                                    </div>
+                                    @endforeach
                                 </td>
                                 <td class="px-5 py-5 border-b border-gray-200 ">
                                     <a href="{{ $product->url }}" class="text-blue-500" target="_blank">{{ $product->url

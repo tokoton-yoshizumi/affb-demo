@@ -10,4 +10,9 @@ class AffiliateType extends Model
     use HasFactory;
 
     protected $fillable = ['name'];
+
+    public function commissions()
+    {
+        return $this->hasMany(ProductCommission::class);
+    }
 }

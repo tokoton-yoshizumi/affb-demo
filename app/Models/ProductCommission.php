@@ -13,4 +13,9 @@ class ProductCommission extends Model
     {
         return $this->belongsTo(Product::class);
     }
+
+    public function affiliateType()
+    {
+        return $this->belongsTo(AffiliateType::class);
+    }
 }
