@@ -17,4 +17,9 @@ class Product extends Model
     {
         return $this->hasMany(ProductCommission::class);
     }
+
+    public function affiliateLinks()
+    {
+        return $this->hasMany(AffiliateLink::class);
+    }
 }

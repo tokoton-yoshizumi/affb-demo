@@ -170,9 +170,29 @@ class ProductController extends Controller
     // 商材の削除
     public function destroy(Product $product)
     {
-        $product->delete();
-        return redirect()->route('products.index')->with('success', '商材が削除されました');
+        try {
+            // 関連データを削除
+            $product->commissions()->delete(); // ProductCommissionの削除
+            $product->affiliateLinks()->delete(); // AffiliateLinkの削除
+
+            // 商材の削除
+            $product->delete();
+
+            // ログに削除情報を記録（任意）
+            Log::info('Product deleted successfully', ['product_id' => $product->id]);
+
+            return redirect()->route('products.index')->with('success', '商材が削除されました');
+        } catch (\Exception $e) {
+            // エラーログ
+            Log::error('Error deleting product', [
+                'product_id' => $product->id,
+                'error_message' => $e->getMessage(),
+            ]);
+
+            return redirect()->back()->withErrors('商材の削除中にエラーが発生しました。');
+        }
     }
+
 
     public function showCode($productId)
     {
