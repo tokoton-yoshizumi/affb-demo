@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Log;
 use Stripe\Stripe;
 use App\Models\Product;
 use Illuminate\Http\Request;

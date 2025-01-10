@@ -73,6 +73,8 @@ Route::post('/webhook/form', [FormWebhookController::class, 'handle'])->name('we
 
 Route::post('/create-checkout-session/{productId}', [StripeCheckoutController::class, 'createCheckoutSession']);
 
+
+
 Route::post('/webhook/stripe', [WebhookController::class, 'handleStripeWebhook'])->name('webhook.stripe');
 
 
