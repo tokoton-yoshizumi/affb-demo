@@ -34,10 +34,11 @@ class ProductController extends Controller
         // バリデーション
         $request->validate([
             'name' => 'required',
-            'description' => 'required',
-            'price' => 'required|integer',
-            'url' => 'required|url',
-            'commissions' => 'required|array',  // 各タイプごとの報酬を配列としてバリデーション
+            'description' => 'nullable', // description は nullable
+            'price' => 'nullable|integer', // price は nullable
+            'url' => 'nullable|url', // url は nullable
+            'price_id' => 'nullable|string', // price_id は nullable
+            'commissions' => 'required|array', // 各タイプごとの報酬は必須
         ]);
 
         // 商材登録
@@ -63,7 +64,7 @@ class ProductController extends Controller
 
         Log::info('All commissions saved successfully', ['product_id' => $product->id]);
 
-        // 全アフィリエイターに対して商材ごとのアフィリエイトリンクを生成
+        // アフィリエイトリンクの生成（アフィリエイターごと）
         $affiliates = User::where('is_admin', false)->get();
         foreach ($affiliates as $affiliate) {
             AffiliateLink::create([
@@ -77,6 +78,7 @@ class ProductController extends Controller
         // 次のステップにリダイレクト
         return redirect()->route('products.showCode', ['product' => $product->id]);
     }
+
 
 
     // 商材編集フォームの表示
@@ -100,9 +102,10 @@ class ProductController extends Controller
             // バリデーション
             $request->validate([
                 'name' => 'required',
-                'description' => 'required',
-                'price' => 'required|integer',
-                'url' => 'required|url',
+                'description' => 'nullable',
+                'price' => 'nullable|integer',
+                'url' => 'nullable|url',
+                'price_id' => 'nullable|string',
                 'commissions' => 'required|array',
             ]);
 
@@ -167,11 +170,12 @@ class ProductController extends Controller
 
 
 
+
     // 商材の削除
     public function destroy(Product $product)
     {
         try {
-            // 商品に関連するアフィリエイトリンクを取得
+            // 商品に関連するアフィリエイトリンクを削除
             $affiliateLinks = $product->affiliateLinks;
 
             // 各アフィリエイトリンクに関連するコミッションを削除
@@ -200,6 +204,7 @@ class ProductController extends Controller
             return redirect()->back()->withErrors('商材の削除中にエラーが発生しました。');
         }
     }
+
 
 
 
