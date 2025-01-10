@@ -11,7 +11,7 @@ class Product extends Model
     use HasFactory;
 
     // フォームからの入力を許可するカラムを指定
-    protected $fillable = ['name', 'description', 'price', 'url'];
+    protected $fillable = ['name', 'description', 'price', 'url', 'price_id'];
 
     public function commissions()
     {
