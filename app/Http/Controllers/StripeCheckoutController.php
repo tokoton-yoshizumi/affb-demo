@@ -34,13 +34,16 @@ class StripeCheckoutController extends Controller
                 'success_url' => route('checkout.success'),
                 'cancel_url' => route('checkout.cancel'),
                 'metadata' => [
-                    'affiliate_ref' => $request->input('affiliate_ref'),
-                    'product_id' => $product->id,
+                    'affiliate_ref' => $request->input('affiliate_ref', null), // アフィリエイトトークン
+                    'product_id' => $product->id, // 商品ID
                 ],
             ]);
 
             // URLをログに記録
-            Log::info('Stripe Checkout Session created successfully', ['url' => $session->url]);
+            Log::info('Stripe Checkout Session created successfully', [
+                'url' => $session->url,
+                'metadata' => $session->metadata,
+            ]);
 
             // Checkout URLに直接リダイレクト
             return redirect($session->url);
@@ -54,6 +57,7 @@ class StripeCheckoutController extends Controller
             return response()->json(['error' => 'Failed to create checkout session'], 500);
         }
     }
+
 
 
 
