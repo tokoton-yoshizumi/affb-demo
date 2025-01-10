@@ -43,9 +43,16 @@ class ProductController extends Controller
         // 商材登録
         $product = Product::create($request->only(['name', 'description', 'price', 'url', 'price_id']));
 
+        Log::info('Product created successfully', ['product_id' => $product->id]);
+
         // 各アフィリエイタータイプごとの報酬を保存
         foreach ($request->commissions as $affiliateTypeId => $commission) {
             if ($commission !== null) {
+                Log::info('Saving commission for affiliate type', [
+                    'affiliate_type_id' => $affiliateTypeId,
+                    'fixed_commission' => $commission,
+                ]);
+
                 ProductCommission::create([
                     'product_id' => $product->id,
                     'affiliate_type_id' => $affiliateTypeId,
@@ -53,6 +60,8 @@ class ProductController extends Controller
                 ]);
             }
         }
+
+        Log::info('All commissions saved successfully', ['product_id' => $product->id]);
 
         // 全アフィリエイターに対して商材ごとのアフィリエイトリンクを生成
         $affiliates = User::where('is_admin', false)->get();
@@ -64,9 +73,11 @@ class ProductController extends Controller
                 'token' => Str::random(10),
             ]);
         }
+
         // 次のステップにリダイレクト
         return redirect()->route('products.showCode', ['product' => $product->id]);
     }
+
 
     // 商材編集フォームの表示
     public function edit(Product $product)
@@ -92,12 +103,18 @@ class ProductController extends Controller
             $product->update($request->only(['name', 'description', 'price', 'url', 'price_id']));
 
             // ログに更新情報を記録
-            Log::info('Product updated:', ['product_id' => $product->id]);
+            Log::info('Product updated successfully', ['product_id' => $product->id]);
 
             // 報酬情報を更新
             ProductCommission::where('product_id', $product->id)->delete();
+
             foreach ($request->commissions as $affiliateTypeId => $commission) {
                 if ($commission !== null) {
+                    Log::info('Updating commission for affiliate type', [
+                        'affiliate_type_id' => $affiliateTypeId,
+                        'fixed_commission' => $commission,
+                    ]);
+
                     ProductCommission::create([
                         'product_id' => $product->id,
                         'affiliate_type_id' => $affiliateTypeId,
@@ -105,6 +122,8 @@ class ProductController extends Controller
                     ]);
                 }
             }
+
+            Log::info('All commissions updated successfully', ['product_id' => $product->id]);
 
             // アフィリエイトリンクを更新
             $affiliates = User::where('is_admin', false)->get();
@@ -132,10 +151,10 @@ class ProductController extends Controller
                 'product_id' => $product->id,
             ]);
 
-            // エラーメッセージを返す
             return redirect()->back()->withErrors('商材の更新中にエラーが発生しました。');
         }
     }
+
 
 
 
