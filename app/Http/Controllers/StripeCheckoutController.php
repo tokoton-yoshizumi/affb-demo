@@ -22,6 +22,13 @@ class StripeCheckoutController extends Controller
             return response()->json(['error' => 'Product not found or price_id is missing'], 404);
         }
 
+        // クライアントから`affiliate_ref`を受け取る
+        $affiliateRef = $request->input('affiliate_ref', null);
+
+        if (!$affiliateRef) {
+            Log::error('Affiliate ref is missing in the request.');
+        }
+
         try {
             // Stripe Checkoutセッションを作成
             $session = \Stripe\Checkout\Session::create([
@@ -34,12 +41,11 @@ class StripeCheckoutController extends Controller
                 'success_url' => route('checkout.success'),
                 'cancel_url' => route('checkout.cancel'),
                 'metadata' => [
-                    'affiliate_ref' => $request->input('affiliate_ref', null), // アフィリエイトトークン
-                    'product_id' => $product->id, // 商品ID
+                    'affiliate_ref' => $affiliateRef, // アフィリエイトトークン
+                    'product_id' => $product->id,    // 商品ID
                 ],
             ]);
 
-            // URLをログに記録
             Log::info('Stripe Checkout Session created successfully', [
                 'url' => $session->url,
                 'metadata' => $session->metadata,
@@ -57,6 +63,7 @@ class StripeCheckoutController extends Controller
             return response()->json(['error' => 'Failed to create checkout session'], 500);
         }
     }
+
 
 
 
