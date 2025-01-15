@@ -32,7 +32,7 @@
                                     電話番号</th>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-600 uppercase tracking-wider">
-                                    アフィリエイトリンク</th>
+                                    登録日時</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -41,8 +41,8 @@
                                 <td class="px-5 py-5 border-b border-gray-200">{{ $customer->name }}</td>
                                 <td class="px-5 py-5 border-b border-gray-200">{{ $customer->email }}</td>
                                 <td class="px-5 py-5 border-b border-gray-200">{{ $customer->phone ?? '未設定' }}</td>
-                                <td class="px-5 py-5 border-b border-gray-200">{{ $customer->affiliateLink->url ?? 'なし'
-                                    }}</td>
+                                <td class="px-5 py-5 border-b border-gray-200">{{ $customer->created_at->format('Y-m-d
+                                    H:i') }}</td>
                             </tr>
                             @endforeach
                         </tbody>
