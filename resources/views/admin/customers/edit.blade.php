@@ -46,7 +46,7 @@
                             <tr>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-600 uppercase tracking-wider">
-                                    商品ID</th>
+                                    商材</th>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left font-semibold text-gray-600 uppercase tracking-wider">
                                     アクション</th>
@@ -58,7 +58,8 @@
                         <tbody>
                             @foreach ($submissions as $submission)
                             <tr>
-                                <td class="px-5 py-5 border-b border-gray-200">{{ $submission->product_id }}</td>
+                                <td class="px-5 py-5 border-b border-gray-200">{{ $submission->product->name ?? '商品なし'
+                                    }}</td>
                                 <td class="px-5 py-5 border-b border-gray-200">{{ $submission->action }}</td>
                                 <td class="px-5 py-5 border-b border-gray-200">{{ $submission->created_at->format('Y-m-d
                                     H:i') }}</td>
