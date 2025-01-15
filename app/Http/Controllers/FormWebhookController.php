@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\AffiliateLink;
@@ -14,11 +15,39 @@ class FormWebhookController extends Controller
     {
         Log::info('Webhook Request:', $request->all()); // ログにリクエスト内容を記録
 
+        // 顧客情報の取得（リクエスト内のデータを使用）
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $phone = $request->input('phone');
+        $address = $request->input('address');
+
+        // 顧客情報のバリデーション
+        if (!$name || !$email) {
+            Log::error('Invalid customer data', [
+                'name' => $name,
+                'email' => $email,
+                'phone' => $phone,
+                'address' => $address,
+            ]);
+            return response()->json(['error' => 'Invalid customer data'], 400);
+        }
+
+        // 顧客情報が既に存在するか確認
+        $customer = Customer::firstOrCreate([
+            'email' => $email, // 顧客情報はメールアドレスで重複チェック
+        ], [
+            'name' => $name,
+            'phone' => $phone,
+            'address' => $address,
+        ]);
+
+        Log::info('Customer created or found successfully', ['customer_id' => $customer->id]);
+
         // 必須フィールドを取得
         $affiliateRef = $request->input('affiliate_ref');
         $action = $request->input('action');
         $productId = $request->input('product_id');
-        $timestamp = $request->input('timestamp');
+        $timestamp = now(); // Laravelの現在のタイムスタンプを使用
 
         // 必須データのバリデーション
         if (!$affiliateRef || !$action || !$productId) {

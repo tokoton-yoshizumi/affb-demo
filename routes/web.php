@@ -11,6 +11,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\WebhookController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FormWebhookController;
 use App\Http\Controllers\AffiliateTypeController;
@@ -97,6 +98,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('affiliate-types', AffiliateTypeController::class);
     Route::get('/admin/reward-requests', [RewardRequestController::class, 'index'])->name('admin.reward-requests.index');
+    Route::resource('customers', CustomerController::class);
 });
 
 
