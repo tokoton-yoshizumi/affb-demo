@@ -12,9 +12,10 @@
                     <div class="flex justify-between">
                         <h3 class="text-2xl font-semibold">顧客一覧</h3>
                         <div class="my-4">
-                            <a href="{{ route('customers.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">
+                            {{-- <a href="{{ route('customers.create') }}"
+                                class="bg-blue-500 text-white px-4 py-2 rounded">
                                 新規登録
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
 
@@ -46,7 +47,7 @@
                                 </td>
                                 <td class="px-5 py-5 border-b border-gray-200">{{ $customer->email }}</td>
                                 <td class="px-5 py-5 border-b border-gray-200">{{ $customer->phone ?? '未設定' }}</td>
-                                <td class="px-5 py-5 border-b border-gray-200">{{ $customer->created_at->format('Y-m-d
+                                <td class="px-5 py-5 border-b border-gray-200">{{ $customer->created_at->format('Y年m月d日
                                     H:i') }}</td>
                             </tr>
                             @endforeach
