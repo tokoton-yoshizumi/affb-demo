@@ -22,7 +22,7 @@ class CustomerController extends Controller
         $submissions = $customer->submissions;
 
         // 顧客情報とsubmissionをビューに渡す
-        return view('customers.edit', compact('customer', 'submissions'));
+        return view('admin.customers.edit', compact('customer', 'submissions'));
     }
 
 
@@ -39,6 +39,6 @@ class CustomerController extends Controller
         $customer = Customer::findOrFail($id);
         $customer->delete();
 
-        return redirect()->route('customers.index')->with('success', '顧客が削除されました');
+        return redirect()->route('admin.customers.index')->with('success', '顧客が削除されました');
     }
 }
