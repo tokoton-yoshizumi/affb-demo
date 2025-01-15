@@ -14,6 +14,18 @@ class CustomerController extends Controller
         return view('admin.customers.index', compact('customers'));
     }
 
+    public function edit($id)
+    {
+        $customer = Customer::findOrFail($id);
+
+        // 顧客の関連するsubmissionデータを取得
+        $submissions = $customer->submissions;
+
+        // 顧客情報とsubmissionをビューに渡す
+        return view('customers.edit', compact('customer', 'submissions'));
+    }
+
+
     public function show($id)
     {
         // 顧客情報詳細表示

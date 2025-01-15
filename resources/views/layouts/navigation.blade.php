@@ -34,6 +34,11 @@
                         {{ __('商材管理') }}
                     </x-nav-link>
 
+                    <!-- 顧客管理リンク（管理者のみ） -->
+                    <x-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.*')">
+                        {{ __('顧客管理') }}
+                    </x-nav-link>
+
                     <!-- 振込申請一覧リンク（管理者のみ） -->
                     <x-nav-link :href="route('admin.reward-requests.index')"
                         :active="request()->routeIs('admin.reward-requests.*')">
