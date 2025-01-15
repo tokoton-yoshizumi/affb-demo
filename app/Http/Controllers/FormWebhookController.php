@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CustomerSubmission;
 use App\Models\Customer;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -20,6 +21,8 @@ class FormWebhookController extends Controller
         $email = $request->input('email');
         $phone = $request->input('phone');
         $address = $request->input('address');
+        $affiliateRef = $request->input('affiliate_ref');
+
 
         // 顧客情報のバリデーション
         if (!$name || !$email) {
@@ -39,6 +42,16 @@ class FormWebhookController extends Controller
             'name' => $name,
             'phone' => $phone,
             'address' => $address,
+
+        ]);
+
+        // 顧客の送信データを記録
+        CustomerSubmission::create([
+            'customer_id' => $customer->id,
+            'product_id' => $request->input('product_id'),
+            'affiliate_ref' => $affiliateRef,
+            'action' => $request->input('action'),
+            'timestamp' => now(),
         ]);
 
         Log::info('Customer created or found successfully', ['customer_id' => $customer->id]);

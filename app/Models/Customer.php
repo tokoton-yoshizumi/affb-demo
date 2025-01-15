@@ -20,4 +20,9 @@ class Customer extends Model
     {
         return $this->belongsTo(AffiliateLink::class);
     }
+
+    public function submissions()
+    {
+        return $this->hasMany(CustomerSubmission::class);
+    }
 }
