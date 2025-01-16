@@ -40,7 +40,7 @@
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">更新</button>
                     </form>
 
-                    <h3 class="text-xl font-semibold mt-6">これまでの資料請求</h3>
+                    <h3 class="text-xl font-semibold mt-6">履歴</h3>
                     <table class="min-w-full leading-normal mt-4">
                         <thead>
                             <tr>
