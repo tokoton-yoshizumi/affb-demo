@@ -9,20 +9,20 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <form method="POST" action="{{ route('products.store') }}">
+                    <form method="POST" action="{{ route("products.store") }}">
                         @csrf
 
                         <!-- 商材名 -->
                         <div class="mb-4">
                             <label for="name" class="block text-sm font-medium text-gray-700">商材名</label>
-                            <input type="text" name="name" id="name" class="form-input mt-1 block w-full" required>
+                            <input type="text" name="name" id="name" class="form-input mt-1 block w-full"
+                                required>
                         </div>
 
                         <!-- 説明 -->
                         <div class="mb-4">
                             <label for="description" class="block text-sm font-medium text-gray-700">説明</label>
-                            <textarea name="description" id="description"
-                                class="form-input mt-1 block w-full"></textarea>
+                            <textarea name="description" id="description" class="form-input mt-1 block w-full"></textarea>
                         </div>
 
                         <!-- 価格 -->
@@ -43,8 +43,7 @@
                             <label for="thank_you_url"
                                 class="block text-sm font-medium text-gray-700">サンクスページのURL</label>
                             <input type="url" name="thank_you_url" id="thank_you_url"
-                                class="form-input mt-1 block w-full" placeholder="https://example.com/thank-you"
-                                required>
+                                class="form-input mt-1 block w-full" placeholder="https://example.com/thank-you">
                         </div>
 
                         <!-- 決済有無 -->
@@ -97,14 +96,15 @@
                         </div>
 
                         <!-- アフィリエイタータイプごとの報酬 -->
-                        @foreach($affiliateTypes as $type)
-                        <div class="mb-4">
-                            <label for="commission_{{ $type->id }}" class="block text-sm font-medium text-gray-700">
-                                {{ $type->name }}の報酬（固定）
-                            </label>
-                            <input type="number" name="commissions[{{ $type->id }}]" id="commission_{{ $type->id }}"
-                                class="form-input mt-1 block w-full">
-                        </div>
+                        @foreach ($affiliateTypes as $type)
+                            <div class="mb-4">
+                                <label for="commission_{{ $type->id }}"
+                                    class="block text-sm font-medium text-gray-700">
+                                    {{ $type->name }}の報酬（固定）
+                                </label>
+                                <input type="number" name="commissions[{{ $type->id }}]"
+                                    id="commission_{{ $type->id }}" class="form-input mt-1 block w-full">
+                            </div>
                         @endforeach
 
                         <!-- 登録ボタン -->
