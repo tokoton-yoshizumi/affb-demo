@@ -16,9 +16,10 @@ class ProductController extends Controller
     // 商材一覧の表示
     public function index()
     {
-        $products = Product::all();
+        $products = Product::where('status', '公開')->get();
         return view('admin.products.index', compact('products'));
     }
+
 
     // 商材登録フォームの表示
     public function create()
@@ -40,10 +41,12 @@ class ProductController extends Controller
             'price_id' => 'nullable|string', // price_id は nullable
             'commissions' => 'required|array', // 各タイプごとの報酬は必須
             'thank_you_url' => 'nullable|url', // サンクスページのURLを追加
+            'status' => 'required|in:公開,非公開' // 追加
+
         ]);
 
         // 商材登録
-        $product = Product::create($request->only(['name', 'description', 'price', 'url', 'price_id', 'thank_you_url']));
+        $product = Product::create($request->only(['name', 'description', 'price', 'url', 'price_id', 'thank_you_url', 'status']));
 
         Log::info('Product created successfully', ['product_id' => $product->id]);
 
@@ -108,65 +111,27 @@ class ProductController extends Controller
                 'url' => 'nullable|url',
                 'price_id' => 'nullable|string',
                 'commissions' => 'required|array',
-                'thank_you_url' => 'nullable|url', // サンクスページのURLを追加
-
+                'thank_you_url' => 'nullable|url',
+                'status' => 'required|in:公開,非公開' // 追加
             ]);
 
             // 商材を更新
-            $product->update($request->only(['name', 'description', 'price', 'url', 'price_id', 'thank_you_url']));
+            $product->update($request->only([
+                'name',
+                'description',
+                'price',
+                'url',
+                'price_id',
+                'thank_you_url',
+                'status'
+            ]));
 
-            // ログに更新情報を記録
-            Log::info('Product updated successfully', ['product_id' => $product->id]);
-
-            // 報酬情報を更新
-            ProductCommission::where('product_id', $product->id)->delete();
-
-            foreach ($request->commissions as $affiliateTypeId => $commission) {
-                if ($commission !== null) {
-                    Log::info('Updating commission for affiliate type', [
-                        'affiliate_type_id' => $affiliateTypeId,
-                        'fixed_commission' => $commission,
-                    ]);
-
-                    ProductCommission::create([
-                        'product_id' => $product->id,
-                        'affiliate_type_id' => $affiliateTypeId,
-                        'fixed_commission' => $commission,
-                    ]);
-                }
-            }
-
-            Log::info('All commissions updated successfully', ['product_id' => $product->id]);
-
-            // アフィリエイトリンクを更新
-            $affiliates = User::where('is_admin', false)->get();
-            foreach ($affiliates as $affiliate) {
-                $affiliateLink = AffiliateLink::firstOrCreate(
-                    ['user_id' => $affiliate->id, 'product_id' => $product->id],
-                    ['token' => Str::random(10)]
-                );
-
-                // ログにリンク更新情報を記録
-                Log::info('Affiliate link updated:', ['affiliate_id' => $affiliate->id, 'product_id' => $product->id]);
-
-                $affiliateLink->update([
-                    'url' => $product->url . '?ref=' . $affiliate->id,
-                ]);
-            }
-
-            // 更新後に追跡コードのページへリダイレクト
-            return redirect()->route('products.showCode', ['product' => $product->id])
-                ->with('success', '商材とアフィリエイトリンク、報酬が更新されました');
+            return redirect()->route('products.index')->with('success', '商材が更新されました');
         } catch (\Exception $e) {
-            // エラーログを出力
-            Log::error('Error updating product:', [
-                'error_message' => $e->getMessage(),
-                'product_id' => $product->id,
-            ]);
-
             return redirect()->back()->withErrors('商材の更新中にエラーが発生しました。');
         }
     }
+
 
     // 商材の削除
     public function destroy(Product $product)

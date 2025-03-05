@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('商材一覧') }}
+            {{ __("商材一覧") }}
         </h2>
     </x-slot>
 
@@ -12,15 +12,13 @@
                     <div class="flex justify-between">
                         <h3 class="text-2xl font-semibold">商材一覧</h3>
 
-
                         <!-- 新規登録ボタン -->
                         <div class="my-4">
-                            <a href="{{ route('products.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">
+                            <a href="{{ route("products.create") }}" class="bg-blue-500 text-white px-4 py-2 rounded">
                                 新規登録
                             </a>
                         </div>
                     </div>
-
 
                     <table class="min-w-full leading-normal mt-4">
                         <thead>
@@ -44,37 +42,33 @@
                             </tr>
                         </thead>
                         <tbody>
+                        <tbody>
                             @foreach ($products as $product)
-                            <tr>
-                                <td class="px-5 py-5 border-b border-gray-200 ">
-                                    <a class="hover:underline hover:text-blue-600"
-                                        href="{{ route('products.edit', $product->id) }}">{{
-                                        $product->name }}</a>
-                                    @if ($product->tracking_code_status === 'not_implemented')
-                                    <span class="text-red-500 text-sm ml-2">トラッキングコード未実装</span>
-                                    @endif
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 ">
-                                    {{ $product->description }}
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 ">
-                                    @foreach ($product->commissions as $commission)
-                                    <div>
-                                        @if ($commission->affiliateType)
-                                        {{ $commission->affiliateType->name }}: ¥{{
-                                        number_format($commission->fixed_commission) }}
-                                        @else
-                                        未設定: ¥{{ number_format($commission->fixed_commission) }}
-                                        @endif
-                                    </div>
-                                    @endforeach
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 ">
-                                    <a href="{{ $product->url }}" class="text-blue-500" target="_blank">{{ $product->url
-                                        }}</a>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td class="px-5 py-5 border-b border-gray-200">
+                                        <a class="hover:underline hover:text-blue-600"
+                                            href="{{ route("products.edit", $product->id) }}">{{ $product->name }}</a>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200">
+                                        {{ $product->description }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200">
+                                        <form action="{{ route("products.update", $product->id) }}" method="POST">
+                                            @csrf
+                                            @method("PUT")
+                                            <select name="status" onchange="this.form.submit()"
+                                                class="border rounded px-2 py-1">
+                                                <option value="公開" {{ $product->status == "公開" ? "selected" : "" }}>
+                                                    公開</option>
+                                                <option value="非公開"
+                                                    {{ $product->status == "非公開" ? "selected" : "" }}>非公開</option>
+                                            </select>
+                                        </form>
+                                    </td>
+                                </tr>
                             @endforeach
+                        </tbody>
+
                         </tbody>
                     </table>
 

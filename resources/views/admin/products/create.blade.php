@@ -107,6 +107,15 @@
                             </div>
                         @endforeach
 
+                        <!-- ステータス（公開 or 非公開） -->
+                        <div class="mb-4">
+                            <label for="status" class="block text-sm font-medium text-gray-700">表示ステータス</label>
+                            <select name="status" id="status" class="form-input mt-1 block w-full">
+                                <option value="公開" selected>公開</option>
+                                <option value="非公開">非公開</option>
+                            </select>
+                        </div>
+
                         <!-- 登録ボタン -->
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">次へ</button>
                     </form>

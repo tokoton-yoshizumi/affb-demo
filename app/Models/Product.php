@@ -11,8 +11,16 @@ class Product extends Model
     use HasFactory;
 
     // フォームからの入力を許可するカラムを指定
-    protected $fillable = ['name', 'description', 'price', 'url', 'price_id', 'thank_you_url'];
-
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'price_id',
+        'url',
+        'tracking_code_status',
+        'thank_you_url',
+        'status'
+    ];
     public function commissions()
     {
         return $this->hasMany(ProductCommission::class);

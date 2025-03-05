@@ -74,8 +74,7 @@
                             <div class="flex items-center space-x-4">
                                 <label>
                                     <input type="radio" name="payment_platform" value="stripe"
-                                        {{ $product->price_id ? "checked" : "" }}
-                                        onclick="togglePlatform()">
+                                        {{ $product->price_id ? "checked" : "" }} onclick="togglePlatform()">
                                     Stripe
                                 </label>
                                 <label>
@@ -114,6 +113,15 @@
                                     class="form-input mt-1 block w-full">
                             </div>
                         @endforeach
+
+                        <!-- 商材のステータス -->
+                        <div class="mb-4">
+                            <label for="status" class="block text-sm font-medium text-gray-700">表示ステータス</label>
+                            <select name="status" id="status" class="form-input mt-1 block w-full">
+                                <option value="公開" {{ $product->status == "公開" ? "selected" : "" }}>公開</option>
+                                <option value="非公開" {{ $product->status == "非公開" ? "selected" : "" }}>非公開</option>
+                            </select>
+                        </div>
 
                         <!-- 保存ボタン -->
                         <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">保存</button>
