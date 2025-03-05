@@ -1,20 +1,13 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // URL から `ref` を取得
-    function getRefParameter() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get("ref");
+    // `ref` を取得（localStorage を優先し、なければ URL から取得）
+    function getAffiliateRef() {
+        return (
+            localStorage.getItem("affiliate_ref") ||
+            new URLSearchParams(window.location.search).get("ref")
+        );
     }
 
-    const ref = getRefParameter();
-
-    // `ref` をクッキー & localStorage に保存（30日間）
-    if (ref) {
-        document.cookie =
-            "affiliate_ref=" +
-            ref +
-            "; path=/; max-age=2592000; Secure; SameSite=Lax";
-        localStorage.setItem("affiliate_ref", ref);
-    }
+    const affiliateRef = getAffiliateRef();
 
     // フォーム送信時の処理
     document.querySelectorAll("form").forEach((form) => {
@@ -32,9 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
-            // `ref` を取得（クッキー or localStorage）
-            const affiliateRef =
-                getRefParameter() || localStorage.getItem("affiliate_ref");
+            // `ref` を追加
             if (affiliateRef) {
                 formData["affiliate_ref"] = affiliateRef;
             }
