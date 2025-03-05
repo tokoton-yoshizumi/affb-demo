@@ -23,7 +23,6 @@ class FormWebhookController extends Controller
         $address = $request->input('address');
         $affiliateRef = $request->input('affiliate_ref');
 
-
         // 顧客情報のバリデーション
         if (!$name || !$email) {
             Log::error('Invalid customer data', [
@@ -42,8 +41,11 @@ class FormWebhookController extends Controller
             'name' => $name,
             'phone' => $phone,
             'address' => $address,
-
         ]);
+
+        // フォームから送信されたその他のデータを処理
+        // ここで "other_data" カラムに JSON として保存します
+        $otherData = $request->except(['name', 'email', 'phone', 'address', 'affiliate_ref', 'action', 'product_id', 'timestamp']);
 
         // 顧客の送信データを記録
         CustomerSubmission::create([
@@ -52,6 +54,7 @@ class FormWebhookController extends Controller
             'affiliate_ref' => $affiliateRef,
             'action' => $request->input('action'),
             'timestamp' => now(),
+            'other_data' => json_encode($otherData), // JSON形式で保存
         ]);
 
         Log::info('Customer created or found successfully', ['customer_id' => $customer->id]);

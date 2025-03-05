@@ -92,8 +92,19 @@ Route::post('/agent-register', [AgentRegisterController::class, 'register']);
 Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
     Route::get('/products/show-code/{product}', [ProductController::class, 'showCode'])->name('products.showCode');
+
+    Route::get('/products/show-code-thanks/{product}', [ProductController::class, 'showCodeThanks'])->name('products.show_code_thanks');
+
+
     Route::post('/products/{product}/track-later', [ProductController::class, 'trackLater'])->name('products.track_later');
     Route::post('/products/{product}/track-done', [ProductController::class, 'trackDone'])->name('products.track_done');
+
+    // フォーム作成のためのルート
+    Route::get('/products/{product}/create-form', [ProductController::class, 'createForm'])->name('products.createForm');
+    Route::post('/products/{product}/save-form', [ProductController::class, 'saveForm'])->name('products.saveForm');
+
+    // サンクスページスクリプトを表示するルート
+    Route::get('/products/{product}/show-thank-you-script', [ProductController::class, 'showThankYouScript'])->name('products.showThankYouScript');
 
     Route::resource('products', ProductController::class);
     Route::resource('affiliate-types', AffiliateTypeController::class);

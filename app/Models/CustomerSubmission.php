@@ -9,7 +9,7 @@ class CustomerSubmission extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['customer_id', 'product_id', 'affiliate_ref', 'action', 'timestamp'];
+    protected $fillable = ['customer_id', 'product_id', 'affiliate_ref', 'action', 'timestamp', 'other_data'];
 
     public function customer()
     {

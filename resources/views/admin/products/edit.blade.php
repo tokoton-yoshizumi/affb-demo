@@ -41,6 +41,15 @@
                                 class="form-input mt-1 block w-full" required>
                         </div>
 
+                        <!-- サンクスページのURL -->
+                        <div class="mb-4">
+                            <label for="thank_you_url"
+                                class="block text-sm font-medium text-gray-700">サンクスページのURL</label>
+                            <input type="url" name="thank_you_url" id="thank_you_url"
+                                class="form-input mt-1 block w-full" placeholder="https://example.com/thank-you"
+                                required>
+                        </div>
+
                         <!-- 決済の有無 -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">決済の有無</label>

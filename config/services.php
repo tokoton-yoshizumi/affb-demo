@@ -31,4 +31,7 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'webhook_url' => env('WEBHOOK_URL', 'https://demo.affb.jp/webhook/form'), // デフォルト値として本番URLを設定
+
+
 ];

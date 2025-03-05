@@ -21,14 +21,14 @@
                         <!-- 説明 -->
                         <div class="mb-4">
                             <label for="description" class="block text-sm font-medium text-gray-700">説明</label>
-                            <textarea name="description" id="description" class="form-input mt-1 block w-full"
-                                required></textarea>
+                            <textarea name="description" id="description"
+                                class="form-input mt-1 block w-full"></textarea>
                         </div>
 
                         <!-- 価格 -->
                         <div class="mb-4">
                             <label for="price" class="block text-sm font-medium text-gray-700">価格</label>
-                            <input type="number" name="price" id="price" class="form-input mt-1 block w-full" required>
+                            <input type="number" name="price" id="price" class="form-input mt-1 block w-full">
                         </div>
 
                         <!-- 商材URL -->
@@ -36,6 +36,15 @@
                             <label for="url" class="block text-sm font-medium text-gray-700">商材URL</label>
                             <input type="url" name="url" id="url" class="form-input mt-1 block w-full"
                                 placeholder="https://example.com" required>
+                        </div>
+
+                        <!-- サンクスページのURL -->
+                        <div class="mb-4">
+                            <label for="thank_you_url"
+                                class="block text-sm font-medium text-gray-700">サンクスページのURL</label>
+                            <input type="url" name="thank_you_url" id="thank_you_url"
+                                class="form-input mt-1 block w-full" placeholder="https://example.com/thank-you"
+                                required>
                         </div>
 
                         <!-- 決済有無 -->

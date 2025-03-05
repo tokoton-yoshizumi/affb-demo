@@ -39,10 +39,11 @@ class ProductController extends Controller
             'url' => 'nullable|url', // url は nullable
             'price_id' => 'nullable|string', // price_id は nullable
             'commissions' => 'required|array', // 各タイプごとの報酬は必須
+            'thank_you_url' => 'nullable|url', // サンクスページのURLを追加
         ]);
 
         // 商材登録
-        $product = Product::create($request->only(['name', 'description', 'price', 'url', 'price_id']));
+        $product = Product::create($request->only(['name', 'description', 'price', 'url', 'price_id', 'thank_you_url']));
 
         Log::info('Product created successfully', ['product_id' => $product->id]);
 
@@ -107,10 +108,12 @@ class ProductController extends Controller
                 'url' => 'nullable|url',
                 'price_id' => 'nullable|string',
                 'commissions' => 'required|array',
+                'thank_you_url' => 'nullable|url', // サンクスページのURLを追加
+
             ]);
 
             // 商材を更新
-            $product->update($request->only(['name', 'description', 'price', 'url', 'price_id']));
+            $product->update($request->only(['name', 'description', 'price', 'url', 'price_id', 'thank_you_url']));
 
             // ログに更新情報を記録
             Log::info('Product updated successfully', ['product_id' => $product->id]);
@@ -165,12 +168,6 @@ class ProductController extends Controller
         }
     }
 
-
-
-
-
-
-
     // 商材の削除
     public function destroy(Product $product)
     {
@@ -205,6 +202,19 @@ class ProductController extends Controller
         }
     }
 
+    public function createForm($productId)
+    {
+        $product = Product::findOrFail($productId);
+        $affiliateTypes = AffiliateType::all();
+        return view('admin.products.create_form', compact('product', 'affiliateTypes'));
+    }
+
+    public function showThankYouScript($productId)
+    {
+        $product = Product::findOrFail($productId);
+        return view('admin.products.show_thank_you', compact('product'));
+    }
+
 
 
 
@@ -216,6 +226,13 @@ class ProductController extends Controller
         // 商材の情報をビューに渡す
         return view('admin.products.show_code', compact('product'));
     }
+
+    public function showCodeThanks(Product $product)
+    {
+        // 完了画面に必要なデータをビューに渡す
+        return view('admin.products.show_code_thanks', compact('product'));
+    }
+
 
     public function trackLater($productId)
     {
