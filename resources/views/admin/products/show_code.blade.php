@@ -31,7 +31,10 @@
 
         // `ref` をクッキー & localStorage に保存（30日間）
         if (ref) {
-            document.cookie = "affiliate_ref=" + ref + "; path=/; max-age=2592000; Secure; SameSite=Lax";
+            document.cookie =
+                "affiliate_ref=" +
+                ref +
+                "; path=/; max-age=2592000; Secure; SameSite=Lax";
             localStorage.setItem("affiliate_ref", ref);
         }
 
@@ -52,14 +55,15 @@
                 });
 
                 // `ref` を取得（クッキー or localStorage）
-                const affiliateRef = getRefParameter() || localStorage.getItem("affiliate_ref");
+                const affiliateRef =
+                    getRefParameter() || localStorage.getItem("affiliate_ref");
                 if (affiliateRef) {
                     formData["affiliate_ref"] = affiliateRef;
                 }
 
                 // `fetch` で Laravel にデータを送信
-                formData["action"] = "資料請求";
-                formData["product_id"] = 17; // 商品ID（適宜変更）
+                formData["action"] = "CAMPFIREアフィリエイト";
+                formData["product_id"] = 1; // 商品ID（適宜変更）
                 formData["timestamp"] = new Date().toISOString();
 
                 console.log("Sending form data to webhook:", formData);
@@ -73,7 +77,9 @@
                     })
                     .then((response) => {
                         if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
+                            throw new Error(
+                                `HTTP error! status: ${response.status}`
+                            );
                         }
                         return response.json();
                     })
@@ -83,7 +89,7 @@
                         // Laravel へのデータ送信が完了したら決済ページにリダイレクト
                         Object.keys(formData).forEach((key) => {
                             url.searchParams.set(key, formData[
-                                key]); // データを URL に追加
+                            key]); // データを URL に追加
                         });
                         window.location.href = url.toString();
                     })
