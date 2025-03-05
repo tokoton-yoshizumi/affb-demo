@@ -12,9 +12,13 @@ class AffiliateCommission extends Model
     protected $fillable = [
         'user_id',
         'affiliate_link_id',
-        'session_id',
         'amount',
-        'product_name'
+        'product_name',
+        'session_id',
+        'is_paid',
+        'paid_at',
+        'status',
+        'created_at'
     ];
 
     public function user()

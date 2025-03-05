@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __("Dashboard") }}
         </h2>
     </x-slot>
 
@@ -31,43 +31,47 @@
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @php
-                                $totalCommission = 0;
+                                    $totalCommission = 0;
                                 @endphp
-                                @foreach($commissions as $commission)
-                                <tr class="border-b">
-                                    <td class="px-6 py-4 text-md text-gray-900 dark:text-gray-100 whitespace-nowrap">
-                                        {{ $commission->created_at->format('Y年m月d日 H:i') }}
-                                    </td>
-                                    <td class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                                        {{$commission->product_name}}
-                                    </td>
-                                    <td class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                                        ¥{{ number_format($commission->amount) }}
-                                    </td>
-                                    <td class="px-6 py-4 text-md">
-                                        @if($commission->created_at->diffInDays(Carbon\Carbon::now()) >= 30 &&
-                                        is_null($commission->paid_at))
-                                        <span class="text-green-500 font-semibold">申請可</span>
-                                        @elseif(!is_null($commission->paid_at))
-                                        <span class="text-blue-500 font-semibold">支払済</span>
-                                        @else
-                                        <span class="text-gray-500 font-semibold">発生</span>
-                                        @endif
-                                    </td>
-                                </tr>
-                                @php
-                                $totalCommission += $commission->amount;
-                                @endphp
+                                @foreach ($commissions as $commission)
+                                    <tr class="border-b">
+                                        <td
+                                            class="px-6 py-4 text-md text-gray-900 dark:text-gray-100 whitespace-nowrap">
+                                            {{ $commission->created_at->format("Y年m月d日 H:i") }}
+                                        </td>
+                                        <td
+                                            class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
+                                            {{ $commission->product_name }}
+                                        </td>
+                                        <td
+                                            class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
+                                            ¥{{ number_format($commission->amount) }}
+                                        </td>
+                                        <td class="px-6 py-4 text-md">
+                                            @if ($commission->status === "確定")
+                                                <span class="text-green-500 font-semibold">確定</span>
+                                            @elseif($commission->created_at->diffInDays(Carbon\Carbon::now()) >= 30 && is_null($commission->paid_at))
+                                                <span class="text-green-500 font-semibold">申請可</span>
+                                            @elseif(!is_null($commission->paid_at))
+                                                <span class="text-blue-500 font-semibold">支払済</span>
+                                            @else
+                                                <span class="text-gray-500 font-semibold">発生</span>
+                                            @endif
+                                        </td>
+
+                                    </tr>
+                                    @php
+                                        $totalCommission += $commission->amount;
+                                    @endphp
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
                     <p class="mt-4 font-semibold">合計報酬: ¥{{ number_format($totalCommission) }}</p>
 
-
                     <!-- 振込申請ボタン -->
                     <div class="mt-6">
-                        <a href="{{ route('reward.request') }}"
+                        <a href="{{ route("reward.request") }}"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                             報酬の振込申請はこちら
                         </a>
@@ -102,43 +106,45 @@
                         </thead>
                         <tbody>
                             @foreach ($affiliate_links as $link)
-                            <tr>
-                                <td class="px-5 py-5 border-b border-gray-200 text-base">
-                                    {{ $link->product->name }}
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-base flex items-center">
-                                    <!-- リンク部分 -->
-                                    <span id="affiliateLink{{ $loop->index }}" class="cursor-pointer hover:underline"
-                                        onclick="copyToClipboard('{{ $link->product->url . '?ref=' . $link->token }}', 'copyMessage{{ $loop->index }}'); return false;">
-                                        {{ $link->product->url . '?ref=' . $link->token }}
-                                    </span>
+                                <tr>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-base">
+                                        {{ $link->product->name }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-base flex items-center">
+                                        <!-- リンク部分 -->
+                                        <span id="affiliateLink{{ $loop->index }}"
+                                            class="cursor-pointer hover:underline"
+                                            onclick="copyToClipboard('{{ $link->product->url . "?ref=" . $link->token }}', 'copyMessage{{ $loop->index }}'); return false;">
+                                            {{ $link->product->url . "?ref=" . $link->token }}
+                                        </span>
 
-                                    <!-- コピー用ボタン -->
-                                    <button id="copyButton{{ $loop->index }}"
-                                        onclick="copyToClipboard('{{ $link->product->url . '?ref=' . $link->token }}', 'copyMessage{{ $loop->index }}')"
-                                        class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ml-2 inline-flex items-center">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                            stroke-width="1.5" stroke="currentColor"
-                                            class="size-5 cursor-pointer hover:underline">
-                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
-                                        </svg>
-                                        <span class="text-xs">コピー</span>
-                                    </button>
+                                        <!-- コピー用ボタン -->
+                                        <button id="copyButton{{ $loop->index }}"
+                                            onclick="copyToClipboard('{{ $link->product->url . "?ref=" . $link->token }}', 'copyMessage{{ $loop->index }}')"
+                                            class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ml-2 inline-flex items-center">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                stroke-width="1.5" stroke="currentColor"
+                                                class="size-5 cursor-pointer hover:underline">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M11.35 3.836c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75 2.25 2.25 0 0 0-.1-.664m-5.8 0A2.251 2.251 0 0 1 13.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m8.9-4.414c.376.023.75.05 1.124.08 1.131.094 1.976 1.057 1.976 2.192V16.5A2.25 2.25 0 0 1 18 18.75h-2.25m-7.5-10.5H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V18.75m-7.5-10.5h6.375c.621 0 1.125.504 1.125 1.125v9.375m-8.25-3 1.5 1.5 3-3.75" />
+                                            </svg>
+                                            <span class="text-xs">コピー</span>
+                                        </button>
 
-                                    <!-- コピー完了メッセージ -->
-                                    <span id="copyMessage{{ $loop->index }}"
-                                        class="ml-2 text-xs text-red-500 hidden">コピーしました！</span>
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-base">
-                                    @php
-                                    $commission = $link->product->commissions()
-                                    ->where('affiliate_type_id', Auth::user()->affiliate_type_id)
-                                    ->first();
-                                    @endphp
-                                    {{ $commission ? '¥' . number_format($commission->fixed_commission) : '報酬なし' }}
-                                </td>
-                            </tr>
+                                        <!-- コピー完了メッセージ -->
+                                        <span id="copyMessage{{ $loop->index }}"
+                                            class="ml-2 text-xs text-red-500 hidden">コピーしました！</span>
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-base">
+                                        @php
+                                            $commission = $link->product
+                                                ->commissions()
+                                                ->where("affiliate_type_id", Auth::user()->affiliate_type_id)
+                                                ->first();
+                                        @endphp
+                                        {{ $commission ? "¥" . number_format($commission->fixed_commission) : "報酬なし" }}
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
@@ -150,19 +156,19 @@
 
     <script>
         function copyToClipboard(text, messageId) {
-        var tempInput = document.createElement('input');
-        tempInput.value = text;
-        document.body.appendChild(tempInput);
-        tempInput.select();
-        document.execCommand('copy');
-        document.body.removeChild(tempInput);
+            var tempInput = document.createElement('input');
+            tempInput.value = text;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
 
-        // コピー完了メッセージを表示
-        var messageElement = document.getElementById(messageId);
-        messageElement.classList.remove('hidden');
-        setTimeout(function() {
-            messageElement.classList.add('hidden');
-        }, 2000); // 2秒後にメッセージを非表示に
-    }
+            // コピー完了メッセージを表示
+            var messageElement = document.getElementById(messageId);
+            messageElement.classList.remove('hidden');
+            setTimeout(function() {
+                messageElement.classList.add('hidden');
+            }, 2000); // 2秒後にメッセージを非表示に
+        }
     </script>
 </x-app-layout>

@@ -124,6 +124,7 @@ class FormWebhookController extends Controller
             'session_id' => null, // セッションIDは不要
             'is_paid' => 0, // 支払い対象外
             'paid_at' => null, // 支払い日時なし
+            'status' => '確定',
             'created_at' => $timestamp, // 資料請求のタイムスタンプ
         ]);
 
