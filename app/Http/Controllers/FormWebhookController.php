@@ -135,6 +135,9 @@ class FormWebhookController extends Controller
             'product_id' => $productId,
         ]);
 
-        return response()->json(['status' => 'success'], 200);
+        return response()->json([
+            'status' => 'mail_sent',
+            'message' => 'Form submitted successfully',
+        ], 200);
     }
 }
