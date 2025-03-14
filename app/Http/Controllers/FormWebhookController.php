@@ -16,41 +16,43 @@ class FormWebhookController extends Controller
     {
         Log::info('Webhook Request:', $request->all()); // ログにリクエスト内容を記録
 
-        // 顧客情報の取得（リクエスト内のデータを使用）
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $phone = $request->input('phone');
-        $address = $request->input('address');
-        $affiliateRef = $request->input('affiliate_ref');
+        // CF7のフィールド名に合わせてデータを取得
+        $name = $request->input('full-name'); // CF7のnameフィールド
+        $email = $request->input('email'); // メールアドレス
+        $affiliateRef = $request->input('affiliate_ref'); // アフィリエイトコード
+        $productId = $request->input('product_id'); // 商品ID
 
-        // 顧客情報のバリデーション
+        // 不要なフィールド（phone, address）は削除
+
+        // 必須項目チェック
         if (!$name || !$email) {
             Log::error('Invalid customer data', [
                 'name' => $name,
                 'email' => $email,
-                'phone' => $phone,
-                'address' => $address,
             ]);
             return response()->json(['error' => 'Invalid customer data'], 400);
         }
 
-        // 顧客情報が既に存在するか確認
+        // 顧客情報の登録・更新（phone, addressは省略）
         $customer = Customer::firstOrCreate([
-            'email' => $email, // 顧客情報はメールアドレスで重複チェック
+            'email' => $email, // メールアドレスで顧客の一意性を判断
         ], [
             'name' => $name,
-            'phone' => $phone,
-            'address' => $address,
         ]);
 
-        // フォームから送信されたその他のデータを処理
-        // ここで "other_data" カラムに JSON として保存します
-        $otherData = $request->except(['name', 'email', 'phone', 'address', 'affiliate_ref', 'action', 'product_id', 'timestamp']);
+        // フォームデータを保存（その他のデータを記録）
+        $otherData = $request->except([
+            'full-name',
+            'email',
+            'affiliate_ref',
+            'product_id',
+            'action',
+            'timestamp'
+        ]);
 
-        // 顧客の送信データを記録
         CustomerSubmission::create([
             'customer_id' => $customer->id,
-            'product_id' => $request->input('product_id'),
+            'product_id' => $productId,
             'affiliate_ref' => $affiliateRef,
             'action' => $request->input('action'),
             'timestamp' => now(),
@@ -60,9 +62,7 @@ class FormWebhookController extends Controller
         Log::info('Customer created or found successfully', ['customer_id' => $customer->id]);
 
         // 必須フィールドを取得
-        $affiliateRef = $request->input('affiliate_ref');
         $action = $request->input('action');
-        $productId = $request->input('product_id');
         $timestamp = now(); // Laravelの現在のタイムスタンプを使用
 
         // 必須データのバリデーション
