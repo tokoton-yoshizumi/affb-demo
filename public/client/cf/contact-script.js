@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-    // `ref` を取得（localStorage を優先し、なければ URL から取得）
     function getAffiliateRef() {
         return (
             localStorage.getItem("affiliate_ref") ||
@@ -9,15 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const affiliateRef = getAffiliateRef();
 
-    // フォーム送信時の処理
     document.querySelectorAll("form").forEach((form) => {
         form.addEventListener("submit", function (e) {
-            e.preventDefault(); // 通常のフォーム送信を防ぐ
+            // CF7 のデフォルトの送信を妨げないために `e.preventDefault();` を削除
 
-            // フォームの送信先（決済ページ）の URL を取得
-            const url = new URL(this.action); // 決済ページの URL
-
-            // フォームデータを取得
             const formData = {};
             form.querySelectorAll("input, textarea").forEach((input) => {
                 if (input.name) {
@@ -25,18 +19,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
             });
 
-            // `ref` を追加
             if (affiliateRef) {
                 formData["affiliate_ref"] = affiliateRef;
             }
 
-            // `fetch` で Laravel にデータを送信
             formData["action"] = "CAMPFIREアフィリエイト";
-            formData["product_id"] = 1; // 商品ID（適宜変更）
+            formData["product_id"] = 1;
             formData["timestamp"] = new Date().toISOString();
 
             console.log("Sending form data to webhook:", formData);
 
+            // Laravel にデータ送信
             fetch("https://demo.affb.jp/webhook/form", {
                 method: "POST",
                 headers: {
@@ -54,17 +47,27 @@ document.addEventListener("DOMContentLoaded", function () {
                 })
                 .then((data) => {
                     console.log("データ送信成功:", data);
-
-                    // Laravel へのデータ送信が完了したら決済ページにリダイレクト
-                    Object.keys(formData).forEach((key) => {
-                        url.searchParams.set(key, formData[key]); // データを URL に追加
-                    });
-                    window.location.href = url.toString();
                 })
                 .catch((error) => {
                     console.error("送信エラー:", error);
-                    alert("データ送信に失敗しました。もう一度お試しください。");
                 });
         });
     });
+
+    // `wpcf7mailsent` を利用してリダイレクトを発火
+    document.addEventListener(
+        "wpcf7mailsent",
+        function (event) {
+            console.log("CF7送信完了イベント発火");
+
+            var redirectLink = document.getElementById("redirectLink");
+            if (redirectLink) {
+                console.log("リダイレクトを実行:", redirectLink.href);
+                window.location.href = redirectLink.href; // `click()` ではなく `href` を直接設定
+            } else {
+                console.log("リダイレクトリンクが見つかりません。");
+            }
+        },
+        false
+    );
 });
