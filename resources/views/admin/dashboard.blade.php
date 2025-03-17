@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ __("Dashboard") }}
         </h2>
     </x-slot>
 
@@ -32,33 +32,31 @@
                                     報酬
                                 </th>
 
-
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($recentCommissions as $commission)
-                            <tr>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    {{ $commission->created_at->format('Y年m月d日') }}
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    {{ $commission->user->name }}
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    {{ $commission->product_name ?? 'N/A' }}
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    ¥{{ number_format($commission->amount) }}
-                                </td>
+                                <tr>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        {{ $commission->created_at->format("Y年m月d日 H:i:s") }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        {{ $commission->user->name }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        {{ $commission->product_name ?? "N/A" }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        ¥{{ number_format($commission->amount) }}
+                                    </td>
 
-
-                            </tr>
+                                </tr>
                             @empty
-                            <tr>
-                                <td colspan="5" class="px-5 py-5 text-center border-b border-gray-200 text-sm">
-                                    最近の報酬はありません。
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td colspan="5" class="px-5 py-5 text-center border-b border-gray-200 text-sm">
+                                        最近の報酬はありません。
+                                    </td>
+                                </tr>
                             @endforelse
                         </tbody>
                     </table>
@@ -94,29 +92,29 @@
                         </thead>
                         <tbody>
                             @foreach ($affiliates as $affiliate)
-                            <tr>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    {{ $affiliate->name }}
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    {{ $affiliate->email }}
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    {{ $affiliate->created_at->format('Y-m-d') }}
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    @if($affiliate->is_partner)
-                                    ZENサポーター
-                                    @elseif($affiliate->is_agent)
-                                    特別代理店
-                                    @else
-                                    一般アフィリエイター
-                                    @endif
-                                </td>
-                                <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                    ¥{{ number_format($affiliate->commissions->sum('amount')) }}
-                                </td>
-                            </tr>
+                                <tr>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        {{ $affiliate->name }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        {{ $affiliate->email }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        {{ $affiliate->created_at->format("Y-m-d") }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        @if ($affiliate->is_partner)
+                                            ZENサポーター
+                                        @elseif($affiliate->is_agent)
+                                            特別代理店
+                                        @else
+                                            一般アフィリエイター
+                                        @endif
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        ¥{{ number_format($affiliate->commissions->sum("amount")) }}
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
