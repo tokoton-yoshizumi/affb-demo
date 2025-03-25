@@ -20,6 +20,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\StripeCheckoutController;
 use App\Http\Controllers\GeneralRegisterController;
 use App\Http\Controllers\Admin\RewardRequestController;
+use App\Http\Controllers\RobotPaymentWebhookController;
 
 /*
 |--------------------------------------------------------------------------

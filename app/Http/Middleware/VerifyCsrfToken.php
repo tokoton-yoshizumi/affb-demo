@@ -16,6 +16,7 @@ class VerifyCsrfToken extends Middleware
         '/webhook/form', // CSRFチェックを除外するルート
         '/webhook/stripe', // CSRFチェックを除外するルート
         '/create-checkout-session/*',
+        'webhook/robot-payment',
 
     ];
 }
