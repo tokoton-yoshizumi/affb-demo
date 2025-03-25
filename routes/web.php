@@ -115,8 +115,7 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
 
 // ROBOT PAYMENT のキックバック
-Route::post('/webhook/robot-payment', [RobotPaymentWebhookController::class, 'handle']);
-
+Route::match(['get', 'post'], '/webhook/robot-payment', [RobotPaymentWebhookController::class, 'handle']);
 
 
 require __DIR__ . '/auth.php';

@@ -13,6 +13,7 @@ class RobotPaymentWebhookController extends Controller
         Log::info('[RobotPaymentWebhook] 受信データ:', $request->all());
 
         // レスポンスはHTTP 200でOK（ロボットペイメントはレスポンスに依存しません）
-        return response()->json(['status' => 'received']);
+        return response('OK', 200)
+            ->header('Content-Type', 'text/html');
     }
 }
