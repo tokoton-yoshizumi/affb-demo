@@ -67,7 +67,7 @@ class RobotPaymentWebhookController extends Controller
         $alreadyExists = AffiliateCommission::where('customer_id', $customer->id)
             ->where('affiliate_link_id', $affiliateLink->id)
             ->where('product_name', $product->name)
-            ->where('status', '決済完了')
+            ->where('status', '確定')
             ->exists();
 
         if ($alreadyExists) {
@@ -85,7 +85,7 @@ class RobotPaymentWebhookController extends Controller
             'session_id' => null,
             'is_paid' => 0,
             'paid_at' => null,
-            'status' => '決済完了',
+            'status' => '確定',
         ]);
 
         Log::info('[Webhook] 決済報酬を登録しました', [
