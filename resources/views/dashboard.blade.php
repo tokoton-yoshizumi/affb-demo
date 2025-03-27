@@ -46,7 +46,7 @@
                                         </td>
                                         <td
                                             class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                                            {{ $commission->reward_type === 'form' ? 'フォーム送信' : '決済報酬' }}
+                                            {{ $commission->reward_type === 'form' ? 'フォーム送信' : '決済完了' }}
                                         </td>
                                         <td
                                             class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
@@ -100,7 +100,7 @@
                                     アフィリエイトリンク</th>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
-                                    フォーム送信 / 決済報酬</th>
+                                    報酬</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -139,7 +139,7 @@
                                             @endphp
                                             @if ($commission)
                                                 フォーム送信: ¥{{ number_format($commission->fixed_commission_on_form) }}<br>
-                                                決済: ¥{{ number_format($commission->fixed_commission_on_payment) }}
+                                                決済完了: ¥{{ number_format($commission->fixed_commission_on_payment) }}
                                             @else
                                                 報酬なし
                                             @endif
