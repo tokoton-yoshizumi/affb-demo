@@ -50,7 +50,7 @@
                                         {{ $commission->product_name ?? 'N/A' }}
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                        {{ $commission->reward_type === 'form' ? 'フォーム送信' : '決済報酬' }}
+                                        {{ $commission->reward_type === 'form' ? 'フォーム送信報酬' : '決済報酬' }}
                                     </td>
 
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
