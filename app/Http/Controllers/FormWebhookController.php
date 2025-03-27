@@ -113,12 +113,14 @@ class FormWebhookController extends Controller
             return response()->json(['error' => 'Commission data not found'], 404);
         }
 
-        $commission = $commissionData->fixed_commission; // 商材登録時に設定された固定報酬
+        $commission = $commissionData->fixed_commission_on_form ?? $commissionData->fixed_commission;
+        // 商材登録時に設定された固定報酬
 
         // 資料請求データをaffiliate_commissionsテーブルに記録
         AffiliateCommission::create([
             'user_id' => $referrer->id, // 紹介者のユーザーID
             'affiliate_link_id' => $affiliateLink->id, // アフィリエイトリンクID
+            'customer_id' => $customer->id,
             'amount' => $commission, // 商材登録時に設定された報酬額
             'product_name' => $product->name, // 資料請求の商品名
             'session_id' => null, // セッションIDは不要

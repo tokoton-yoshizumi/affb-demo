@@ -9,9 +9,9 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <form method="POST" action="{{ route("products.update", $product->id) }}">
+                    <form method="POST" action="{{ route('products.update', $product->id) }}">
                         @csrf
-                        @method("PUT")
+                        @method('PUT')
 
                         <!-- 商材名 -->
                         <div class="mb-4">
@@ -54,13 +54,13 @@
                             <div class="flex items-center space-x-4">
                                 <label>
                                     <input type="radio" name="payment_option" value="none"
-                                        {{ $product->price_id || $product->robot_price_id ? "" : "checked" }}
+                                        {{ $product->price_id || $product->robot_price_id ? '' : 'checked' }}
                                         onclick="togglePaymentOption()">
                                     決済なし
                                 </label>
                                 <label>
                                     <input type="radio" name="payment_option" value="with_payment"
-                                        {{ $product->price_id || $product->robot_price_id ? "checked" : "" }}
+                                        {{ $product->price_id || $product->robot_price_id ? 'checked' : '' }}
                                         onclick="togglePaymentOption()">
                                     決済あり
                                 </label>
@@ -69,48 +69,64 @@
 
                         <!-- 決済プラットフォーム選択 -->
                         <div id="payment-options"
-                            class="mb-4 {{ $product->price_id || $product->robot_price_id ? "" : "hidden" }}">
+                            class="mb-4 {{ $product->price_id || $product->robot_price_id ? '' : 'hidden' }}">
                             <label class="block text-sm font-medium text-gray-700">決済プラットフォーム</label>
                             <div class="flex items-center space-x-4">
                                 <label>
                                     <input type="radio" name="payment_platform" value="stripe"
-                                        {{ $product->price_id ? "checked" : "" }} onclick="togglePlatform()">
+                                        {{ $product->price_id ? 'checked' : '' }} onclick="togglePlatform()">
                                     Stripe
                                 </label>
                                 <label>
                                     <input type="radio" name="payment_platform" value="robot"
-                                        {{ $product->robot_price_id ? "checked" : "" }} onclick="togglePlatform()">
+                                        {{ $product->robot_price_id ? 'checked' : '' }} onclick="togglePlatform()">
                                     Robot Payment
                                 </label>
                             </div>
                         </div>
 
                         <!-- Stripe 価格ID -->
-                        <div id="stripe-price-id" class="mb-4 {{ $product->price_id ? "" : "hidden" }}">
+                        <div id="stripe-price-id" class="mb-4 {{ $product->price_id ? '' : 'hidden' }}">
                             <label for="price_id" class="block text-sm font-medium text-gray-700">Stripe 価格ID</label>
                             <input type="text" name="price_id" id="price_id" class="form-input mt-1 block w-full"
-                                placeholder="price_xxxxx" value="{{ old("price_id", $product->price_id) }}">
+                                placeholder="price_xxxxx" value="{{ old('price_id', $product->price_id) }}">
                         </div>
 
                         <!-- Robot Payment 価格ID -->
-                        <div id="robot-price-id" class="mb-4 {{ $product->robot_price_id ? "" : "hidden" }}">
+                        <div id="robot-price-id" class="mb-4 {{ $product->robot_price_id ? '' : 'hidden' }}">
                             <label for="robot_price_id" class="block text-sm font-medium text-gray-700">Robot Payment
                                 価格ID</label>
                             <input type="text" name="robot_price_id" id="robot_price_id"
                                 class="form-input mt-1 block w-full" placeholder="robot_xxxxx"
-                                value="{{ old("robot_price_id", $product->robot_price_id) }}">
+                                value="{{ old('robot_price_id', $product->robot_price_id) }}">
                         </div>
 
                         <!-- アフィリエイタータイプごとの報酬 -->
                         @foreach ($affiliateTypes as $type)
-                            <div class="mb-4">
-                                <label for="commission_{{ $type->id }}"
+                            <div class="mb-4 border p-4 rounded-md bg-gray-100">
+                                <h4 class="font-semibold text-sm text-gray-700 mb-2">
+                                    {{ $type->name }} の報酬設定
+                                </h4>
+
+                                <!-- フォーム送信報酬 -->
+                                <label for="commissions_form_{{ $type->id }}"
                                     class="block text-sm font-medium text-gray-700">
-                                    {{ $type->name }}の報酬（固定）
+                                    フォーム送信報酬（円）
                                 </label>
-                                <input type="number" name="commissions[{{ $type->id }}]"
-                                    id="commission_{{ $type->id }}" value="{{ $commissions[$type->id] ?? "" }}"
-                                    class="form-input mt-1 block w-full">
+                                <input type="number" name="commissions_form[{{ $type->id }}]"
+                                    id="commissions_form_{{ $type->id }}" class="form-input mt-1 block w-full mb-3"
+                                    value="{{ old('commissions_form.' . $type->id, $formCommissions[$type->id] ?? '') }}"
+                                    placeholder="例: 500">
+
+                                <!-- 決済完了報酬 -->
+                                <label for="commissions_payment_{{ $type->id }}"
+                                    class="block text-sm font-medium text-gray-700">
+                                    決済完了報酬（円）
+                                </label>
+                                <input type="number" name="commissions_payment[{{ $type->id }}]"
+                                    id="commissions_payment_{{ $type->id }}" class="form-input mt-1 block w-full"
+                                    value="{{ old('commissions_payment.' . $type->id, $paymentCommissions[$type->id] ?? '') }}"
+                                    placeholder="例: 3000">
                             </div>
                         @endforeach
 
@@ -118,8 +134,8 @@
                         <div class="mb-4">
                             <label for="status" class="block text-sm font-medium text-gray-700">表示ステータス</label>
                             <select name="status" id="status" class="form-input mt-1 block w-full">
-                                <option value="公開" {{ $product->status == "公開" ? "selected" : "" }}>公開</option>
-                                <option value="非公開" {{ $product->status == "非公開" ? "selected" : "" }}>非公開</option>
+                                <option value="公開" {{ $product->status == '公開' ? 'selected' : '' }}>公開</option>
+                                <option value="非公開" {{ $product->status == '非公開' ? 'selected' : '' }}>非公開</option>
                             </select>
                         </div>
 
@@ -128,9 +144,9 @@
                     </form>
 
                     <!-- 削除ボタン -->
-                    <form method="POST" action="{{ route("products.destroy", $product->id) }}" class="mt-4">
+                    <form method="POST" action="{{ route('products.destroy', $product->id) }}" class="mt-4">
                         @csrf
-                        @method("DELETE")
+                        @method('DELETE')
                         <button type="submit" class="px-4 py-2 bg-red-500 text-white rounded"
                             onclick="return confirm('本当に削除しますか？この操作は元に戻せません。')">
                             この商品を削除

@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <form method="POST" action="{{ route("products.store") }}">
+                    <form method="POST" action="{{ route('products.store') }}">
                         @csrf
 
                         <!-- 商材名 -->
@@ -97,13 +97,28 @@
 
                         <!-- アフィリエイタータイプごとの報酬 -->
                         @foreach ($affiliateTypes as $type)
-                            <div class="mb-4">
-                                <label for="commission_{{ $type->id }}"
+                            <div class="mb-4 border p-4 rounded-md bg-gray-100">
+                                <h4 class="font-semibold text-sm text-gray-700 mb-2">
+                                    {{ $type->name }} の報酬設定
+                                </h4>
+
+                                <!-- フォーム送信報酬 -->
+                                <label for="commissions_form_{{ $type->id }}"
                                     class="block text-sm font-medium text-gray-700">
-                                    {{ $type->name }}の報酬（固定）
+                                    フォーム送信報酬（円）
                                 </label>
-                                <input type="number" name="commissions[{{ $type->id }}]"
-                                    id="commission_{{ $type->id }}" class="form-input mt-1 block w-full">
+                                <input type="number" name="commissions_form[{{ $type->id }}]"
+                                    id="commissions_form_{{ $type->id }}" class="form-input mt-1 block w-full mb-3"
+                                    placeholder="例: 500">
+
+                                <!-- 決済完了報酬 -->
+                                <label for="commissions_payment_{{ $type->id }}"
+                                    class="block text-sm font-medium text-gray-700">
+                                    決済完了報酬（円）
+                                </label>
+                                <input type="number" name="commissions_payment[{{ $type->id }}]"
+                                    id="commissions_payment_{{ $type->id }}" class="form-input mt-1 block w-full"
+                                    placeholder="例: 3000">
                             </div>
                         @endforeach
 

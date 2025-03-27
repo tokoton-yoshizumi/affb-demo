@@ -7,7 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductCommission extends Model
 {
-    protected $fillable = ['product_id', 'affiliate_type', 'fixed_commission', 'commission_rate', 'affiliate_type_id',];
+
+    protected $fillable = [
+        'product_id',
+        'affiliate_type',
+        'affiliate_type_id',
+        'fixed_commission',
+        'fixed_commission_on_form',
+        'fixed_commission_on_payment',
+        'commission_rate',
+    ];
 
     public function product()
     {

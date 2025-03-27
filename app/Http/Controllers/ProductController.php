@@ -35,14 +35,14 @@ class ProductController extends Controller
         // バリデーション
         $request->validate([
             'name' => 'required',
-            'description' => 'nullable', // description は nullable
-            'price' => 'nullable|integer', // price は nullable
-            'url' => 'nullable|url', // url は nullable
-            'price_id' => 'nullable|string', // price_id は nullable
-            'commissions' => 'required|array', // 各タイプごとの報酬は必須
-            'thank_you_url' => 'nullable|url', // サンクスページのURLを追加
-            'status' => 'required|in:公開,非公開' // 追加
-
+            'description' => 'nullable',
+            'price' => 'nullable|integer',
+            'url' => 'nullable|url',
+            'price_id' => 'nullable|string',
+            'commissions_form' => 'required|array',
+            'commissions_payment' => 'required|array',
+            'thank_you_url' => 'nullable|url',
+            'status' => 'required|in:公開,非公開'
         ]);
 
         // 商材登録
@@ -50,20 +50,16 @@ class ProductController extends Controller
 
         Log::info('Product created successfully', ['product_id' => $product->id]);
 
-        // 各アフィリエイタータイプごとの報酬を保存
-        foreach ($request->commissions as $affiliateTypeId => $commission) {
-            if ($commission !== null) {
-                Log::info('Saving commission for affiliate type', [
-                    'affiliate_type_id' => $affiliateTypeId,
-                    'fixed_commission' => $commission,
-                ]);
+        // フォーム報酬 / 決済報酬を保存
+        foreach ($request->commissions_form as $affiliateTypeId => $formAmount) {
+            $paymentAmount = $request->commissions_payment[$affiliateTypeId] ?? null;
 
-                ProductCommission::create([
-                    'product_id' => $product->id,
-                    'affiliate_type_id' => $affiliateTypeId,
-                    'fixed_commission' => $commission,
-                ]);
-            }
+            ProductCommission::create([
+                'product_id' => $product->id,
+                'affiliate_type_id' => $affiliateTypeId,
+                'fixed_commission_on_form' => $formAmount,
+                'fixed_commission_on_payment' => $paymentAmount,
+            ]);
         }
 
         Log::info('All commissions saved successfully', ['product_id' => $product->id]);
@@ -110,9 +106,10 @@ class ProductController extends Controller
                 'price' => 'nullable|integer',
                 'url' => 'nullable|url',
                 'price_id' => 'nullable|string',
-                'commissions' => 'required|array',
+                'commissions_form' => 'required|array',
+                'commissions_payment' => 'required|array',
                 'thank_you_url' => 'nullable|url',
-                'status' => 'required|in:公開,非公開' // 追加
+                'status' => 'required|in:公開,非公開'
             ]);
 
             // 商材を更新
@@ -125,6 +122,21 @@ class ProductController extends Controller
                 'thank_you_url',
                 'status'
             ]));
+
+            // 既存の報酬を削除
+            $product->commissions()->delete();
+
+            // フォーム報酬 / 決済報酬を再登録
+            foreach ($request->commissions_form as $affiliateTypeId => $formAmount) {
+                $paymentAmount = $request->commissions_payment[$affiliateTypeId] ?? null;
+
+                ProductCommission::create([
+                    'product_id' => $product->id,
+                    'affiliate_type_id' => $affiliateTypeId,
+                    'fixed_commission_on_form' => $formAmount,
+                    'fixed_commission_on_payment' => $paymentAmount,
+                ]);
+            }
 
             return redirect()->route('products.index')->with('success', '商材が更新されました');
         } catch (\Exception $e) {
