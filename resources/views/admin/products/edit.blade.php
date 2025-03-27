@@ -49,7 +49,7 @@
                                 placeholder="https://example.com/thank-you">
                         </div>
 
-                        <!-- 決済の有無 -->
+                        {{-- <!-- 決済の有無 -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">決済の有無</label>
                             <div class="flex items-center space-x-4">
@@ -102,7 +102,7 @@
                                 class="form-input mt-1 block w-full rounded-md border-gray-300"
                                 placeholder="robot_xxxxx"
                                 value="{{ old('robot_price_id', $product->robot_price_id) }}">
-                        </div>
+                        </div> --}}
 
                         <!-- アフィリエイタータイプごとの報酬 -->
                         @foreach ($affiliateTypes as $type)
@@ -168,7 +168,7 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
+    {{-- <!-- JavaScript -->
     <script>
         function togglePaymentOption() {
             const paymentOption = document.querySelector('input[name="payment_option"]:checked').value;
@@ -198,5 +198,5 @@
                 robotPriceIdDiv.classList.remove('hidden');
             }
         }
-    </script>
+    </script> --}}
 </x-app-layout>
