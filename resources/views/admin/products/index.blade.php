@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __("商材一覧") }}
+            {{ __('商材一覧') }}
         </h2>
     </x-slot>
 
@@ -12,12 +12,12 @@
                     <div class="flex justify-between">
                         <h3 class="text-2xl font-semibold">商材一覧</h3>
 
-                        <!-- 新規登録ボタン -->
+                        {{-- <!-- 新規登録ボタン -->
                         <div class="my-4">
                             <a href="{{ route("products.create") }}" class="bg-blue-500 text-white px-4 py-2 rounded">
                                 新規登録
                             </a>
-                        </div>
+                        </div> --}}
                     </div>
 
                     <table class="min-w-full leading-normal mt-4">
@@ -42,12 +42,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($products->where("status", "公開") as $product)
+                            @foreach ($products->where('status', '公開') as $product)
                                 <tr>
                                     <td class="px-5 py-5 border-b border-gray-200 ">
                                         <a class="hover:underline hover:text-blue-600"
-                                            href="{{ route("products.edit", $product->id) }}">{{ $product->name }}</a>
-                                        @if ($product->tracking_code_status === "not_implemented")
+                                            href="{{ route('products.edit', $product->id) }}">{{ $product->name }}</a>
+                                        @if ($product->tracking_code_status === 'not_implemented')
                                             <span class="text-red-500 text-sm ml-2">トラッキングコード未実装</span>
                                         @endif
                                     </td>
@@ -56,16 +56,22 @@
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 ">
                                         @foreach ($product->commissions as $commission)
-                                            <div>
+                                            <div class="mb-1">
                                                 @if ($commission->affiliateType)
-                                                    {{ $commission->affiliateType->name }}:
-                                                    ¥{{ number_format($commission->fixed_commission) }}
+                                                    <strong>{{ $commission->affiliateType->name }}</strong><br>
                                                 @else
-                                                    未設定: ¥{{ number_format($commission->fixed_commission) }}
+                                                    <strong>未設定</strong><br>
                                                 @endif
+                                                <span class="text-sm">
+                                                    フォーム送信:
+                                                    ¥{{ number_format($commission->fixed_commission_on_form ?? 0) }}<br>
+                                                    決済完了:
+                                                    ¥{{ number_format($commission->fixed_commission_on_payment ?? 0) }}
+                                                </span>
                                             </div>
                                         @endforeach
                                     </td>
+
                                     <td class="px-5 py-5 border-b border-gray-200 ">
                                         <a href="{{ $product->url }}" class="text-blue-500"
                                             target="_blank">{{ $product->url }}</a>
