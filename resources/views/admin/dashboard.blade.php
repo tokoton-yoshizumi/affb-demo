@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __("Dashboard") }}
+            {{ __('Dashboard') }}
         </h2>
     </x-slot>
 
@@ -10,7 +10,7 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
                 <div class="p-6 text-gray-900 dark:text-gray-100 mt-8">
-                    <h3 class="text-lg font-semibold">直近のアフィリエイト記録</h3>
+                    <h3 class="text-lg font-semibold">アフィリエイト報酬一覧</h3>
 
                     <table class="min-w-full leading-normal mt-4">
                         <thead>
@@ -29,37 +29,46 @@
                                 </th>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    種別
+                                </th>
+                                <th
+                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                     報酬
                                 </th>
-
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($recentCommissions as $commission)
                                 <tr>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                        {{ $commission->created_at->format("Y年m月d日 H:i:s") }}
+                                        {{ $commission->created_at->format('Y年m月d日 H:i:s') }}
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
                                         {{ $commission->user->name }}
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                        {{ $commission->product_name ?? "N/A" }}
+                                        {{ $commission->product_name ?? 'N/A' }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        {{ $commission->status == '確定' ? 'フォーム送信' : ($commission->status == '決済完了' ? '決済報酬' : $commission->status) }}
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
                                         ¥{{ number_format($commission->amount) }}
                                     </td>
-
                                 </tr>
                             @empty
                                 <tr>
                                     <td colspan="5" class="px-5 py-5 text-center border-b border-gray-200 text-sm">
-                                        最近の報酬はありません。
+                                        報酬記録はまだありません。
                                     </td>
                                 </tr>
                             @endforelse
                         </tbody>
                     </table>
+
+                    {{-- <div class="mt-4">
+                        {{ $recentCommissions->links() }}
+                    </div> --}}
                 </div>
 
                 <div class="p-6 text-gray-900 dark:text-gray-100">
@@ -100,7 +109,7 @@
                                         {{ $affiliate->email }}
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                        {{ $affiliate->created_at->format("Y-m-d") }}
+                                        {{ $affiliate->created_at->format('Y-m-d') }}
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
                                         @if ($affiliate->is_partner)
@@ -112,7 +121,7 @@
                                         @endif
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                        ¥{{ number_format($affiliate->commissions->sum("amount")) }}
+                                        ¥{{ number_format($affiliate->commissions->sum('amount')) }}
                                     </td>
                                 </tr>
                             @endforeach
