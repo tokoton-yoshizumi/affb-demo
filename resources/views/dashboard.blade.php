@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __("Dashboard") }}
+            {{ __('Dashboard') }}
         </h2>
     </x-slot>
 
@@ -23,6 +23,9 @@
                                         内容</th>
                                     <th
                                         class="px-6 py-3 text-left text-md font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        種別</th>
+                                    <th
+                                        class="px-6 py-3 text-left text-md font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         金額</th>
                                     <th
                                         class="px-6 py-3 text-left text-md font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
@@ -30,14 +33,12 @@
                                 </tr>
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                @php
-                                    $totalCommission = 0;
-                                @endphp
+                                @php $totalCommission = 0; @endphp
                                 @foreach ($commissions as $commission)
                                     <tr class="border-b">
                                         <td
                                             class="px-6 py-4 text-md text-gray-900 dark:text-gray-100 whitespace-nowrap">
-                                            {{ $commission->created_at->format("Y年m月d日 H:i") }}
+                                            {{ $commission->created_at->format('Y年m月d日 H:i') }}
                                         </td>
                                         <td
                                             class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
@@ -45,10 +46,14 @@
                                         </td>
                                         <td
                                             class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
+                                            {{ $commission->reward_type === 'form' ? 'フォーム送信' : '決済報酬' }}
+                                        </td>
+                                        <td
+                                            class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
                                             ¥{{ number_format($commission->amount) }}
                                         </td>
                                         <td class="px-6 py-4 text-md">
-                                            @if ($commission->status === "確定")
+                                            @if ($commission->status === '確定')
                                                 <span class="text-green-500 font-semibold">確定</span>
                                             @elseif($commission->created_at->diffInDays(Carbon\Carbon::now()) >= 30 && is_null($commission->paid_at))
                                                 <span class="text-green-500 font-semibold">申請可</span>
@@ -58,11 +63,8 @@
                                                 <span class="text-gray-500 font-semibold">発生</span>
                                             @endif
                                         </td>
-
                                     </tr>
-                                    @php
-                                        $totalCommission += $commission->amount;
-                                    @endphp
+                                    @php $totalCommission += $commission->amount; @endphp
                                 @endforeach
                             </tbody>
                         </table>
@@ -71,7 +73,7 @@
 
                     <!-- 振込申請ボタン -->
                     <div class="mt-6">
-                        <a href="{{ route("reward.request") }}"
+                        <a href="{{ route('reward.request') }}"
                             class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
                             報酬の振込申請はこちら
                         </a>
@@ -92,36 +94,30 @@
                             <tr>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
-                                    商材名
-                                </th>
+                                    商材名</th>
                                 <th
                                     class="w-[60%] px-5 py-3 border-b-2 border-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
-                                    アフィリエイトリンク
-                                </th>
+                                    アフィリエイトリンク</th>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left text-base font-semibold text-gray-600 uppercase tracking-wider">
-                                    報酬額
-                                </th>
+                                    フォーム送信 / 決済報酬</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($affiliate_links as $link)
-                                @if ($link->product->status === "公開")
+                                @if ($link->product->status === '公開')
                                     <tr>
                                         <td class="px-5 py-5 border-b border-gray-200 text-base">
                                             {{ $link->product->name }}
                                         </td>
                                         <td class="px-5 py-5 border-b border-gray-200 text-base flex items-center">
-                                            <!-- リンク部分 -->
                                             <span id="affiliateLink{{ $loop->index }}"
                                                 class="cursor-pointer hover:underline"
-                                                onclick="copyToClipboard('{{ $link->product->url . "?ref=" . $link->token }}', 'copyMessage{{ $loop->index }}'); return false;">
-                                                {{ $link->product->url . "?ref=" . $link->token }}
+                                                onclick="copyToClipboard('{{ $link->product->url . '?ref=' . $link->token }}', 'copyMessage{{ $loop->index }}'); return false;">
+                                                {{ $link->product->url . '?ref=' . $link->token }}
                                             </span>
-
-                                            <!-- コピー用ボタン -->
                                             <button id="copyButton{{ $loop->index }}"
-                                                onclick="copyToClipboard('{{ $link->product->url . "?ref=" . $link->token }}', 'copyMessage{{ $loop->index }}')"
+                                                onclick="copyToClipboard('{{ $link->product->url . '?ref=' . $link->token }}', 'copyMessage{{ $loop->index }}')"
                                                 class="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 ml-2 inline-flex items-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none"
                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
@@ -131,8 +127,6 @@
                                                 </svg>
                                                 <span class="text-xs">コピー</span>
                                             </button>
-
-                                            <!-- コピー完了メッセージ -->
                                             <span id="copyMessage{{ $loop->index }}"
                                                 class="ml-2 text-xs text-red-500 hidden">コピーしました！</span>
                                         </td>
@@ -140,17 +134,21 @@
                                             @php
                                                 $commission = $link->product
                                                     ->commissions()
-                                                    ->where("affiliate_type_id", Auth::user()->affiliate_type_id)
+                                                    ->where('affiliate_type_id', Auth::user()->affiliate_type_id)
                                                     ->first();
                                             @endphp
-                                            {{ $commission ? "¥" . number_format($commission->fixed_commission) : "報酬なし" }}
+                                            @if ($commission)
+                                                フォーム: ¥{{ number_format($commission->fixed_commission_on_form) }}<br>
+                                                決済: ¥{{ number_format($commission->fixed_commission_on_payment) }}
+                                            @else
+                                                報酬なし
+                                            @endif
                                         </td>
                                     </tr>
                                 @endif
                             @endforeach
                         </tbody>
                     </table>
-
                 </div>
             </div>
         </div>
@@ -165,12 +163,11 @@
             document.execCommand('copy');
             document.body.removeChild(tempInput);
 
-            // コピー完了メッセージを表示
             var messageElement = document.getElementById(messageId);
             messageElement.classList.remove('hidden');
             setTimeout(function() {
                 messageElement.classList.add('hidden');
-            }, 2000); // 2秒後にメッセージを非表示に
+            }, 2000);
         }
     </script>
 </x-app-layout>
