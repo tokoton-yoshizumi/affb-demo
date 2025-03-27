@@ -138,7 +138,7 @@
                                                     ->first();
                                             @endphp
                                             @if ($commission)
-                                                フォーム: ¥{{ number_format($commission->fixed_commission_on_form) }}<br>
+                                                フォーム送信: ¥{{ number_format($commission->fixed_commission_on_form) }}<br>
                                                 決済: ¥{{ number_format($commission->fixed_commission_on_payment) }}
                                             @else
                                                 報酬なし
