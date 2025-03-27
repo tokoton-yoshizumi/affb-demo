@@ -128,6 +128,7 @@ class FormWebhookController extends Controller
             'paid_at' => null, // 支払い日時なし
             'status' => '確定',
             'created_at' => $timestamp, // 資料請求のタイムスタンプ
+            'reward_type' => 'form',
         ]);
 
         Log::info('Affiliate commission recorded successfully', [

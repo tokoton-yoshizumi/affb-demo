@@ -18,7 +18,8 @@ class AffiliateCommission extends Model
         'is_paid',
         'paid_at',
         'status',
-        'created_at'
+        'created_at',
+        'reward_type',
     ];
 
     public function user()

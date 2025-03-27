@@ -86,6 +86,7 @@ class RobotPaymentWebhookController extends Controller
             'is_paid' => 0,
             'paid_at' => null,
             'status' => '確定',
+            'reward_type' => 'payment',
         ]);
 
         Log::info('[Webhook] 決済報酬を登録しました', [

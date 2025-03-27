@@ -50,8 +50,9 @@
                                         {{ $commission->product_name ?? 'N/A' }}
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                        {{ $commission->status == '確定' ? 'フォーム送信' : ($commission->status == '決済完了' ? '決済報酬' : $commission->status) }}
+                                        {{ $commission->reward_type === 'form' ? 'フォーム送信' : '決済報酬' }}
                                     </td>
+
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
                                         ¥{{ number_format($commission->amount) }}
                                     </td>
