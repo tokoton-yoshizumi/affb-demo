@@ -106,7 +106,7 @@
                         <tbody>
                             @foreach ($affiliate_links as $link)
                                 @if ($link->product->status === '公開')
-                                    <tr>
+                                    <tr class="align-top">
                                         <td class="px-5 py-5 border-b border-gray-200 text-base">
                                             {{ $link->product->name }}
                                         </td>
