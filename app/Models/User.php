@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\AffiliateCommission;
+use App\Models\Product;  // Product モデルを追加
 
 class User extends Authenticatable
 {
@@ -76,6 +77,17 @@ class User extends Authenticatable
                 'user_id' => $user->id,
                 'token' => $token,
             ]);
+
+            // 全ての商品に対してアフィリエイトリンクを作成し、product_id を設定
+            $products = Product::all();  // 全ての商品を取得
+            foreach ($products as $product) {
+                AffiliateLink::create([
+                    'user_id' => $user->id,
+                    'product_id' => $product->id,  // 商品IDを設定
+                    'token' => Str::random(10),    // ランダムなトークンを生成
+                    'url' => $product->url . '?ref=' . $user->id,  // アフィリエイトリンクを作成
+                ]);
+            }
 
             // デフォルトのアフィリエイトタイプIDを設定（例: 一般アフィリエイターとして登録）
             $user->affiliate_type_id = 1;  // デフォルトで一般アフィリエイター
