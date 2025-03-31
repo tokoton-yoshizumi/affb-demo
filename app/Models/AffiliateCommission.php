@@ -20,6 +20,7 @@ class AffiliateCommission extends Model
         'status',
         'created_at',
         'reward_type',
+        'customer_id',
     ];
 
     public function user()
