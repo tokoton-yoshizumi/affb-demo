@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="text-center mb-2">
         <h2 class="text-2xl font-semibold text-gray-900 dark:text-gray-100">
-            ZENアフィリエイト<br>新規登録フォーム
+            アフィリエイター<br>新規登録フォーム
         </h2>
     </div>
     <form method="POST" action="{{ route('general.register') }}">
@@ -18,8 +18,8 @@
         <!-- Email Address -->
         <div class="mt-4">
             <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
-                autocomplete="username" />
+            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')"
+                required autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
