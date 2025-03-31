@@ -19,6 +19,8 @@ class DashboardController extends Controller
         $commissions = AffiliateCommission::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
 
+        $rewardDescription = '';
+
 
         return view('dashboard', compact('commissions', 'rewardDescription', 'affiliate_links'));
     }
