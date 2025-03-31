@@ -24,11 +24,14 @@ class GeneralRegisterController extends Controller
         ]);
 
         // 新規ユーザーを作成
-        $user = User::create([
+        $user = new User([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+        // save() を使うことでイベントリスナーを発火させる
+        $user->save();  // これにより、Userモデルのbootメソッドのcreatedイベントが発火します
 
         // ユーザーを自動的にログイン
         Auth::login($user);
