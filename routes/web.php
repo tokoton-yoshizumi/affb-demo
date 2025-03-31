@@ -110,6 +110,9 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     Route::resource('products', ProductController::class);
     Route::resource('affiliate-types', AffiliateTypeController::class);
     Route::get('/admin/reward-requests', [RewardRequestController::class, 'index'])->name('admin.reward-requests.index');
+    Route::put('/admin/reward-requests/{id}', [RewardRequestController::class, 'update'])->name('admin.reward-requests.update');
+
+
     Route::resource('customers', CustomerController::class);
 });
 

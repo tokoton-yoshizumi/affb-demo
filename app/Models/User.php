@@ -106,4 +106,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo(AffiliateType::class);
     }
+
+    // app/Models/User.php
+    public function rewardRequests()
+    {
+        return $this->hasMany(RewardRequest::class);
+    }
 }
