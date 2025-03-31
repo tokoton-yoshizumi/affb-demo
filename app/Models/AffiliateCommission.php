@@ -36,4 +36,9 @@ class AffiliateCommission extends Model
     {
         return $this->belongsTo(User::class, 'payer_id');
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }

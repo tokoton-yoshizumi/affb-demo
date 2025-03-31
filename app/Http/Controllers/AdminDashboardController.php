@@ -17,9 +17,10 @@ class AdminDashboardController extends Controller
             ->get();
 
         // アフィリエイト報酬をページネーションで取得（全件対象）
-        $recentCommissions = AffiliateCommission::with('user')
+        $recentCommissions = AffiliateCommission::with(['user', 'customer'])
             ->orderBy('created_at', 'desc')
-            ->paginate(10); // 1ページ10件ずつ表示
+            ->paginate(10);
+
 
         return view('admin.dashboard', compact('affiliates', 'recentCommissions'));
     }

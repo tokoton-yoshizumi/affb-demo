@@ -122,6 +122,7 @@ class FormWebhookController extends Controller
             'affiliate_link_id' => $affiliateLink->id, // アフィリエイトリンクID
             'customer_id' => $customer->id,
             'amount' => $commission, // 商材登録時に設定された報酬額
+
             'product_name' => $product->name, // 資料請求の商品名
             'session_id' => null, // セッションIDは不要
             'is_paid' => 0, // 支払い対象外

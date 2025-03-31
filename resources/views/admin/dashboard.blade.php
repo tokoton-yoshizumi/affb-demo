@@ -25,6 +25,11 @@
                                 </th>
                                 <th
                                     class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                                    顧客名
+                                </th>
+
+                                <th
+                                    class="px-5 py-3 border-b-2 border-gray-200 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                                     商材
                                 </th>
                                 <th
@@ -45,6 +50,9 @@
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
                                         {{ $commission->user->name }}
+                                    </td>
+                                    <td class="px-5 py-5 border-b border-gray-200 text-sm">
+                                        {{ $commission->customer->name ?? '不明' }}
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
                                         {{ $commission->product_name ?? 'N/A' }}
