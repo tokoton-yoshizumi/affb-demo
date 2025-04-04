@@ -68,6 +68,7 @@ class RobotPaymentWebhookController extends Controller
             ->where('affiliate_link_id', $affiliateLink->id)
             ->where('product_name', $product->name)
             ->where('status', '確定')
+            ->where('reward_type', 'payment') // ←これを追加
             ->exists();
 
         if ($alreadyExists) {
