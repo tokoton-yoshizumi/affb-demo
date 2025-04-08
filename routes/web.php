@@ -21,6 +21,7 @@ use App\Http\Controllers\StripeCheckoutController;
 use App\Http\Controllers\GeneralRegisterController;
 use App\Http\Controllers\Admin\RewardRequestController;
 use App\Http\Controllers\RobotPaymentWebhookController;
+use App\Http\Controllers\Admin\AffiliateCommissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -114,6 +115,10 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
 
 
     Route::resource('customers', CustomerController::class);
+
+    // アフィリエイト報酬のステータス更新
+    Route::patch('/admin/commissions/{commission}/status', [AffiliateCommissionController::class, 'updateStatus'])
+        ->name('admin.commissions.updateStatus');
 });
 
 

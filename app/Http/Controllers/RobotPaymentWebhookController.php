@@ -63,20 +63,16 @@ class RobotPaymentWebhookController extends Controller
 
         $paymentCommission = $commissionData->fixed_commission_on_payment ?? $commissionData->fixed_commission;
 
-        // 同じ顧客・アフィリエイトリンク・商品で既に「決済成果」が登録されていないか確認
+        // 重複の判定（あえて報酬は登録する）
         $alreadyExists = AffiliateCommission::where('customer_id', $customer->id)
-            ->where('affiliate_link_id', $affiliateLink->id)
             ->where('product_name', $product->name)
             ->where('status', '確定')
-            ->where('reward_type', 'payment') // ←これを追加
+            ->where('reward_type', 'payment')
             ->exists();
 
-        if ($alreadyExists) {
-            Log::info("[Webhook] 決済報酬はすでに登録済みです");
-            return response('OK', 200)->header('Content-Type', 'text/html');
-        }
+        // ステータスの設定
+        $status = $alreadyExists ? '重複' : '確定';
 
-        // 決済成果を登録
         AffiliateCommission::create([
             'user_id' => $referrer->id,
             'affiliate_link_id' => $affiliateLink->id,
@@ -86,15 +82,16 @@ class RobotPaymentWebhookController extends Controller
             'session_id' => null,
             'is_paid' => 0,
             'paid_at' => null,
-            'status' => '確定',
+            'status' => $status,
             'reward_type' => 'payment',
         ]);
 
-        Log::info('[Webhook] 決済報酬を登録しました', [
+        Log::info("[Webhook] 決済報酬を登録しました（ステータス: {$status}）", [
             'email' => $email,
             'amount' => $paymentCommission,
             'user_id' => $referrer->id,
         ]);
+
 
         return response('OK', 200)->header('Content-Type', 'text/html');
     }
