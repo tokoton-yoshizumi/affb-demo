@@ -68,7 +68,7 @@
                                         @if ($commission->status === '重複')
                                             <span
                                                 class="ml-2 inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded">
-                                                ⚠️ 重複決済
+                                                ⚠️ 重複
                                             </span>
                                         @endif
                                     </td>
@@ -142,9 +142,9 @@
                         </tbody>
                     </table>
 
-                    {{-- <div class="mt-4">
+                    <div class="mt-4">
                         {{ $recentCommissions->links() }}
-                    </div> --}}
+                    </div>
                 </div>
 
                 <div class="p-6 text-gray-900 dark:text-gray-100">
