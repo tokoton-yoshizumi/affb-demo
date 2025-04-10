@@ -67,11 +67,11 @@ class FormWebhookController extends Controller
 
         // 必須データのバリデーション
         if (!$affiliateRef || !$action || !$productId) {
-            Log::error('Invalid request data', [
+            Log::warning('Commission was NOT recorded due to missing required fields', [
+                'email' => $email,
                 'affiliate_ref' => $affiliateRef,
                 'action' => $action,
                 'product_id' => $productId,
-                'timestamp' => $timestamp,
             ]);
             return response()->json(['error' => 'Invalid request'], 400);
         }
@@ -80,7 +80,10 @@ class FormWebhookController extends Controller
         $affiliateLink = AffiliateLink::where('token', $affiliateRef)->first();
 
         if (!$affiliateLink) {
-            Log::error('Affiliate link not found', ['affiliate_ref' => $affiliateRef]);
+            Log::warning('Commission was NOT recorded because affiliate link not found', [
+                'email' => $email,
+                'affiliate_ref' => $affiliateRef,
+            ]);
             return response()->json(['error' => 'Affiliate link not found'], 404);
         }
 
@@ -88,7 +91,10 @@ class FormWebhookController extends Controller
         $referrer = $affiliateLink->user;
 
         if (!$referrer) {
-            Log::error('Referrer not found', ['affiliate_link_id' => $affiliateLink->id]);
+            Log::warning('Commission was NOT recorded because referrer not found', [
+                'email' => $email,
+                'affiliate_link_id' => $affiliateLink->id,
+            ]);
             return response()->json(['error' => 'Referrer not found'], 404);
         }
 
@@ -96,7 +102,10 @@ class FormWebhookController extends Controller
         $product = Product::find($productId);
 
         if (!$product) {
-            Log::error('Product not found', ['product_id' => $productId]);
+            Log::warning('Commission was NOT recorded because product not found', [
+                'email' => $email,
+                'product_id' => $productId,
+            ]);
             return response()->json(['error' => 'Product not found'], 404);
         }
 
@@ -106,12 +115,14 @@ class FormWebhookController extends Controller
             ->first();
 
         if (!$commissionData) {
-            Log::error('Commission data not found', [
+            Log::warning('Commission was NOT recorded because commission data not found', [
+                'email' => $email,
                 'product_id' => $productId,
                 'affiliate_type_id' => $referrer->affiliate_type_id,
             ]);
             return response()->json(['error' => 'Commission data not found'], 404);
         }
+
 
         $commission = $commissionData->fixed_commission_on_form ?? $commissionData->fixed_commission;
         // 商材登録時に設定された固定報酬
