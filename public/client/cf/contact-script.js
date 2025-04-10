@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const affiliateRef = getAffiliateRef();
-    alert("送信前のアフィリエイトコード: " + affiliateRef);
+
     console.log("Affiliate Ref (before form submit):", affiliateRef); // デバッグ用
 
     // `wpcf7mailsent` を利用してフォーム送信後に処理を実行
