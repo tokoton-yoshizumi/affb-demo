@@ -9,6 +9,39 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
+                @if (session('success'))
+                    <div class="p-6 text-gray-900 dark:text-gray-100">
+                        <div
+                            class="rounded-md bg-green-50 p-4 border border-green-200 dark:bg-green-900/10 dark:border-green-700">
+                            <div class="flex items-center">
+                                <div class="shrink-0">
+                                    <svg class="size-5 text-green-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                                <div class="ml-3">
+                                    <p class="text-sm font-medium text-green-800 dark:text-green-100">
+                                        {{ session('success') }}
+                                    </p>
+                                </div>
+                                <div class="ml-auto pl-3">
+                                    <button type="button"
+                                        class="inline-flex rounded-md bg-green-50 p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50"
+                                        onclick="this.closest('div.rounded-md').remove();">
+                                        <span class="sr-only">閉じる</span>
+                                        <svg class="size-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path
+                                                d="M6.28 5.22a.75.75 0 0 0-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 1 0 1.06 1.06L10 11.06l3.72 3.72a.75.75 0 1 0 1.06-1.06L11.06 10l3.72-3.72a.75.75 0 0 0-1.06-1.06L10 8.94 6.28 5.22Z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 <div class="p-6 text-gray-900 dark:text-gray-100 mt-8">
                     <h3 class="text-lg font-semibold">アフィリエイト報酬一覧</h3>
 
@@ -54,8 +87,12 @@
                                         {{ $commission->created_at->format('Y年m月d日 H:i:s') }}
                                     </td>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                        {{ $commission->user->name }}
+                                        <a href="{{ route('admin.affiliates.show', $commission->user->id) }}"
+                                            class="text-blue-500 underline">
+                                            {{ $commission->user->name }}
+                                        </a>
                                     </td>
+
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
                                         {{ $commission->customer->name ?? '不明' }}
                                     </td>
@@ -179,8 +216,12 @@
                             @foreach ($affiliates as $affiliate)
                                 <tr>
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
-                                        {{ $affiliate->name }}
+                                        <a href="{{ route('admin.affiliates.show', $affiliate->id) }}"
+                                            class="text-blue-500 underline">
+                                            {{ $affiliate->name }}
+                                        </a>
                                     </td>
+
                                     <td class="px-5 py-5 border-b border-gray-200 text-sm">
                                         {{ $affiliate->email }}
                                     </td>

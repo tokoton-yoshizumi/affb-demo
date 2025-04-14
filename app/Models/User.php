@@ -144,4 +144,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(RewardRequest::class);
     }
+
+    public function affiliateLinks()
+    {
+        return $this->hasMany(\App\Models\AffiliateLink::class);
+    }
 }

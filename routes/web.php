@@ -21,6 +21,7 @@ use App\Http\Controllers\StripeCheckoutController;
 use App\Http\Controllers\GeneralRegisterController;
 use App\Http\Controllers\Admin\RewardRequestController;
 use App\Http\Controllers\RobotPaymentWebhookController;
+use App\Http\Controllers\Admin\AdminAffiliateController;
 use App\Http\Controllers\Admin\AffiliateCommissionController;
 
 /*
@@ -119,6 +120,12 @@ Route::middleware(['auth', 'is_admin'])->group(function () {
     // アフィリエイト報酬のステータス更新
     Route::patch('/admin/commissions/{commission}/status', [AffiliateCommissionController::class, 'updateStatus'])
         ->name('admin.commissions.updateStatus');
+
+
+    Route::get('/affiliates/{id}', [AdminAffiliateController::class, 'show'])->name('admin.affiliates.show');
+    Route::delete('/affiliates/{id}', [AdminAffiliateController::class, 'destroy'])->name('admin.affiliates.destroy');
+    Route::patch('/affiliate-links/{id}/toggle', [AdminAffiliateController::class, 'toggleLinkStatus'])->name('admin.affiliateLinks.toggle');
+    Route::patch('/affiliates/{id}/disable-all-links', [AdminAffiliateController::class, 'disableAllLinks'])->name('admin.affiliates.disableAllLinks');
 });
 
 

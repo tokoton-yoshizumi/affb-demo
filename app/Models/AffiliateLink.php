@@ -32,4 +32,9 @@ class AffiliateLink extends Model
     {
         return $this->hasMany(AffiliateCommission::class, 'affiliate_link_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }

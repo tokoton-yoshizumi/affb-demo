@@ -104,9 +104,12 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @php $hasActiveLinks = false; @endphp
+
                             @foreach ($affiliate_links as $link)
-                                @if ($link->product->status === '公開')
-                                    <tr class="">
+                                @if ($link->is_active && $link->product->status === '公開')
+                                    @php $hasActiveLinks = true; @endphp
+                                    <tr>
                                         <td class="px-5 py-5 border-b border-gray-200 text-base">
                                             {{ $link->product->name }}
                                         </td>
@@ -147,7 +150,17 @@
                                     </tr>
                                 @endif
                             @endforeach
+
+                            @if (!$hasActiveLinks)
+                                <tr>
+                                    <td colspan="3"
+                                        class="px-5 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
+                                        現在利用可能なアフィリエイトリンクはありません。
+                                    </td>
+                                </tr>
+                            @endif
                         </tbody>
+
                     </table>
                 </div>
             </div>
