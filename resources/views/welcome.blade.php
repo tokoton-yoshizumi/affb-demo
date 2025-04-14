@@ -837,36 +837,35 @@
     <div
         class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-dots-darker bg-center bg-gray-100 dark:bg-dots-lighter dark:bg-gray-900 selection:bg-red-500 selection:text-white">
         @if (Route::has('login'))
-        <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
-            @auth
-            <a href="{{ url('/dashboard') }}"
-                class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">ダッシュボード</a>
-            @else
-            <a href="{{ route('login') }}"
-                class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">ログイン</a>
+            <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+                @auth
+                    <a href="{{ url('/dashboard') }}"
+                        class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">ダッシュボード</a>
+                @else
+                    <a href="{{ route('login') }}"
+                        class="font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">ログイン</a>
 
-            @if (Route::has('register'))
-            <a href="{{ route('register') }}"
-                class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">会員登録</a>
-            @endif
-            @endauth
-        </div>
+                    @if (Route::has('register'))
+                        <a href="{{ route('register') }}"
+                            class="ml-4 font-semibold text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white focus:outline focus:outline-2 focus:rounded-sm focus:outline-red-500">会員登録</a>
+                    @endif
+                @endauth
+            </div>
         @endif
 
         <div class="max-w-7xl mx-auto p-6 lg:p-8 bg-white">
 
-            <h1 class="text-2xl text-center font-bold">ZENアフィリエイトへようこそ</h1>
+            <h1 class="text-2xl text-center font-bold">AffBアフィリエイトへようこそ</h1>
 
             <!-- ボタンを横並びに配置 -->
             <div class="flex justify-center gap-4 mt-4">
-                <a href="{{ route('register') }}">
-                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded">公認サポーター登録</button>
+                <a href="{{ route('login') }}">
+                    <button class="bg-blue-500 text-white font-bold py-2 px-4 rounded">ログインはこちら</button>
                 </a>
-                <a href="{{ route('general.register') }}">
+                {{-- <a href="{{ route('general.register') }}">
                     <button class="bg-green-500 text-white font-bold py-2 px-4 rounded">一般登録</button>
-                </a>
+                </a> --}}
             </div>
-
 
         </div>
     </div>
