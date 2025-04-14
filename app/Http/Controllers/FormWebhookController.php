@@ -76,16 +76,19 @@ class FormWebhookController extends Controller
             return response()->json(['error' => 'Invalid request'], 400);
         }
 
-        // アフィリエイトリンクを取得
-        $affiliateLink = AffiliateLink::where('token', $affiliateRef)->first();
+        // アクティブなアフィリエイトリンクを取得（無効なリンクは除外）
+        $affiliateLink = AffiliateLink::where('token', $affiliateRef)
+            ->where('is_active', true)
+            ->first();
 
         if (!$affiliateLink) {
-            Log::warning('Commission was NOT recorded because affiliate link not found', [
+            Log::warning('Commission was NOT recorded because affiliate link is inactive or not found', [
                 'email' => $email,
                 'affiliate_ref' => $affiliateRef,
             ]);
-            return response()->json(['error' => 'Affiliate link not found'], 404);
+            return response()->json(['error' => 'Inactive or missing affiliate link'], 404);
         }
+
 
         // アフィリエイター（紹介者）を取得
         $referrer = $affiliateLink->user;

@@ -11,10 +11,19 @@ class AdminAffiliateController extends Controller
 {
     public function show($id)
     {
-        $affiliate = User::with(['commissions', 'affiliateLinks.product'])->findOrFail($id);
+        $affiliate = User::with([
+            'commissions',
+            'affiliateLinks' => function ($query) {
+                // 商品が「公開」になっているリンクのみ取得
+                $query->whereHas('product', function ($q) {
+                    $q->where('status', '公開');
+                })->with('product'); // ← product も eager load する
+            }
+        ])->findOrFail($id);
 
         return view('admin.affiliates.show', compact('affiliate'));
     }
+
 
     public function destroy($id)
     {

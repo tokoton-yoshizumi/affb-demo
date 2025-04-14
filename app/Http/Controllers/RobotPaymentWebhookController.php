@@ -42,7 +42,16 @@ class RobotPaymentWebhookController extends Controller
         }
 
         // アフィリエイトリンク・紹介者・商品を取得
-        $affiliateLink = AffiliateLink::where('token', $submission->affiliate_ref)->first();
+        $affiliateLink = AffiliateLink::where('token', $submission->affiliate_ref)
+            ->where('is_active', true)
+            ->first();
+
+        // アフィリエイトリンクが無効化されている場合
+        if (!$affiliateLink) {
+            Log::warning("[Webhook] 有効なアフィリエイトリンクが見つかりません（無効化されている可能性あり）: ref={$submission->affiliate_ref}");
+            return response('NG', 200)->header('Content-Type', 'text/html');
+        }
+
         $referrer = $affiliateLink?->user;
         $product = Product::find($submission->product_id);
 
