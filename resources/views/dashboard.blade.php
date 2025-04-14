@@ -18,6 +18,10 @@
                                     <th
                                         class="px-6 py-3 text-left text-md font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         日時</th>
+
+                                    <th
+                                        class="px-6 py-3 text-left text-md font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        顧客名</th>
                                     <th
                                         class="px-6 py-3 text-left text-md font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         内容</th>
@@ -40,6 +44,12 @@
                                             class="px-6 py-4 text-md text-gray-900 dark:text-gray-100 whitespace-nowrap">
                                             {{ $commission->created_at->format('Y年m月d日 H:i') }}
                                         </td>
+
+                                        <td
+                                            class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
+                                            {{ $commission->customer->name ?? '不明' }}
+                                        </td>
+
                                         <td
                                             class="px-6 py-4 text-md text-gray-500 dark:text-gray-300 whitespace-nowrap">
                                             {{ $commission->product_name }}

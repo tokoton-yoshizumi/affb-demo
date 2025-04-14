@@ -15,8 +15,11 @@ class DashboardController extends Controller
         // アフィリエイトリンクを取得
         $affiliate_links = AffiliateLink::where('user_id', $user->id)->get();
 
-        // アフィリエイト報酬を取得
-        $commissions = AffiliateCommission::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        $commissions = AffiliateCommission::where('user_id', $user->id)
+            ->with('customer') // ← これを追加
+            ->orderBy('created_at', 'desc')
+            ->get();
+
 
 
         $rewardDescription = '';
